@@ -15,9 +15,9 @@ PBL_APP_INFO(MY_UUID,
              APP_INFO_WATCH_FACE);
 */		 
 
-#define WEEKDAY_FRAME	  (GRect(1,  2, 90, 168-145)) 
-#define BATT_FRAME 	      (GRect(93,  4, 35, 168-146)) 
-#define BT_FRAME 	      (GRect(120,  4, 20, 168-146)) 
+#define WEEKDAY_FRAME	  (GRect(5,  2, 95, 168-145)) 
+#define BATT_FRAME 	      (GRect(100,  4, 40, 168-146)) 
+#define BT_FRAME 	      (GRect(125,  4, 25, 168-146)) 
 #define TIME_FRAME        (GRect(0, 15, 144, 168-16)) 
 #define DATE_FRAME        (GRect(1, 69, 139, 168-62)) 
 
@@ -426,7 +426,7 @@ void handle_init(void)
 	
 	//Load the custom fonts
 	res_t = resource_get_handle(RESOURCE_ID_FUTURA_CONDENSED_53); // Time font
-	res_d = resource_get_handle(RESOURCE_ID_FUTURA_18); // Date font
+	res_d = resource_get_handle(RESOURCE_ID_FUTURA_17); // Date font
 	res_u = resource_get_handle(RESOURCE_ID_FUTURA_14); // Last Update font
 	//res_temp =  resource_get_handle(RESOURCE_ID_FUTURA_36); //Temperature
 	

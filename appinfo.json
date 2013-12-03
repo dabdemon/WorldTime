@@ -21,15 +21,15 @@
                 "file": "fonts/futura_condensed_bold-webfont.ttf"
             },
             {
-                "characterRegex": "[0-9A-Za-z :]",
+                "characterRegex": "[0-9A-Za-z ]",
                 "type": "font",
-                "name": "FUTURA_14",
+                "name": "FUTURA_17",
                 "file": "fonts/futura.ttf"
             },
             {
-                "characterRegex": "[0-9A-Za-z ]",
+                "characterRegex": "[0-9A-Za-z :]",
                 "type": "font",
-                "name": "FUTURA_18",
+                "name": "FUTURA_14",
                 "file": "fonts/futura.ttf"
             },
             {
