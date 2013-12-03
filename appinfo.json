@@ -1,0 +1,57 @@
+{
+    "versionLabel": "1.0",
+    "uuid": "4296c359-6177-4d96-b1a4-262bf90b7af9",
+    "appKeys": {},
+    "longName": "World Time",
+    "versionCode": 1,
+    "capabilities": [
+        ""
+    ],
+    "shortName": "World Time",
+    "companyName": "dabdemon",
+    "watchapp": {
+        "watchface": true
+    },
+    "resources": {
+        "media": [
+            {
+                "characterRegex": "[0-9:]",
+                "type": "font",
+                "name": "FUTURA_CONDENSED_53",
+                "file": "fonts/futura_condensed_bold-webfont.ttf"
+            },
+            {
+                "characterRegex": "[0-9A-Za-z :]",
+                "type": "font",
+                "name": "FUTURA_14",
+                "file": "fonts/futura.ttf"
+            },
+            {
+                "characterRegex": "[0-9A-Za-z ]",
+                "type": "font",
+                "name": "FUTURA_18",
+                "file": "fonts/futura.ttf"
+            },
+            {
+                "type": "png",
+                "name": "BATT_EMPTY",
+                "file": "images/batt_empty.png"
+            },
+            {
+                "type": "png",
+                "name": "BATT_CHAR",
+                "file": "images/batt_char.png"
+            },
+            {
+                "type": "png",
+                "name": "BT_DISCONNECTED",
+                "file": "images/bluetooth_Off_white_small.png"
+            },
+            {
+                "type": "png",
+                "name": "BT_CONNECTED",
+                "file": "images/bluetooth_white_small.png"
+            }
+        ]
+    }
+}
