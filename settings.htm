@@ -43,18 +43,30 @@
         <div data-role="fieldcontain">
           <label for="TZ2Name">Name</label>
           <input type="text" name="TZ2Name" id="TZ2Name" value="" />
+          <label for="TZ2Hour">Hours</label>
+          <input type="number" name="TZ2Hour" id="TZ2Hour" value=0 />
+          <label for="TZ1Minute">Minutes</label>
+          <input type="number" name="TZ2Minute" id="TZ2Minute" value=0 />
         </div>
 
 <p><b>Time Zone 3:</b></p>
         <div data-role="fieldcontain">
           <label for="TZ3Name">Name</label>
           <input type="text" name="TZ3Name" id="TZ3Name" value="" />
+          <label for="TZ3Hour">Hours</label>
+          <input type="number" name="TZ3Hour" id="TZ3Hour" value=0 />
+          <label for="TZ1Minute">Minutes</label>
+          <input type="number" name="TZ3Minute" id="TZ3Minute" value=0 />
         </div>
 
 <p><b>Time Zone 4:</b></p>
         <div data-role="fieldcontain">
           <label for="TZ4Name">Name</label>
           <input type="text" name="TZ4Name" id="TZ4Name" value="" />
+          <label for="TZ4Hour">Hours</label>
+          <input type="number" name="TZ4Hour" id="TZ4Hour" value=0 />
+          <label for="TZ1Minute">Minutes</label>
+          <input type="number" name="TZ4Minute" id="TZ4Minute" value=0 />
         </div>
         
         <div data-role="fieldcontain">
@@ -92,8 +104,14 @@
           'TZ1Hour': $('#TZ1Hour').val(),
           'TZ1Minute': $('#TZ1Minute').val(),
           'TZ2Name': $('#TZ2Name').val(),
+          'TZ2Hour': $('#TZ2Hour').val(),
+          'TZ2Minute': $('#TZ2Minute').val(),
           'TZ3Name': $('#TZ3Name').val(),
+          'TZ3Hour': $('#TZ3Hour').val(),
+          'TZ3Minute': $('#TZ3Minute').val(),
           'TZ4Name': $('#TZ4Name').val(),
+          'TZ4Hour': $('#TZ4Hour').val(),
+          'TZ4Minute': $('#TZ4Minute').val(),
           'invert_color': $('#invert_color').val()
         }
         return options;
@@ -111,8 +129,14 @@
         $('#TZ1Hour').val(getQueryVariable('TZ1Hour'));
         $('#TZ1Minute').val(getQueryVariable('TZ1Minute'));
         $('#TZ2Name').val(getQueryVariable('TZ2Name'));
+        $('#TZ2Hour').val(getQueryVariable('TZ2Hour'));
+        $('#TZ2Minute').val(getQueryVariable('TZ2Minute'));
         $('#TZ3Name').val(getQueryVariable('TZ3Name'));
+        $('#TZ3Hour').val(getQueryVariable('TZ3Hour'));
+        $('#TZ3Minute').val(getQueryVariable('TZ3Minute'));
         $('#TZ4Name').val(getQueryVariable('TZ4Name'));
+        $('#TZ4Hour').val(getQueryVariable('TZ4Hour'));
+        $('#TZ4Minute').val(getQueryVariable('TZ4Minute'));
         $('#invert_color').val(getQueryVariable('invert_color')).change();
 
        
