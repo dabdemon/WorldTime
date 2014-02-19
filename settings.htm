@@ -89,6 +89,8 @@
       function saveOptions() {
        var options = {
           'TZ1Name': $('#TZ1Name').val(),
+          'TZ1Hour': $('#TZ1Hour').val(),
+          'TZ1Minute': $('#TZ1Minute').val(),
           'TZ2Name': $('#TZ2Name').val(),
           'TZ3Name': $('#TZ3Name').val(),
           'TZ4Name': $('#TZ4Name').val(),
@@ -106,6 +108,8 @@
         });
 
         $('#TZ1Name').val(getQueryVariable('TZ1Name'));
+        $('#TZ1Hour').val(getQueryVariable('TZ1Hour'));
+        $('#TZ1Minute').val(getQueryVariable('TZ1Minute'));
         $('#TZ2Name').val(getQueryVariable('TZ2Name'));
         $('#TZ3Name').val(getQueryVariable('TZ3Name'));
         $('#TZ4Name').val(getQueryVariable('TZ4Name'));
