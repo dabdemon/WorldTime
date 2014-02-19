@@ -28,30 +28,13 @@
 
 
 
-        <div data-role="fieldcontain">
-          <label for="gps_switch">Use GPS</label>
-          <select name="gps_switch" id="gps_switch" data-theme="c" data-role="slider" data-track-theme="d">
-            <option value="false">No</option>
-            <option value="true">Yes</option>
-          </select>
-        </div>
 
         <div data-role="fieldcontain">
           <label for="location">Location</label>
           <input type="text" name="location" id="location" value="" />
         </div>
 
-        <div data-role="fieldcontain">
-          <fieldset data-role="controlgroup" data-type="horizontal">
-            <legend>Units:</legend>
 
-            <label for="celsius">Celsius</label>
-            <input type="radio" id="celsius" name="units" value="celsius" data-theme="c">
-
-            <label for="fahrenheit">Fahrenheit</label>
-            <input type="radio" id="fahrenheit" name="units" value="fahrenheit" data-theme="c">
-          </fieldset>
-        </div>
         
         <div data-role="fieldcontain">
           <label for="invert_color">Invert Colors</label>
@@ -84,9 +67,8 @@
 
       function saveOptions() {
        var options = {
-          'use_gps': $('#gps_switch').val(),
           'location': $('#location').val(),
-          'units': $('input:radio[name=units]:checked').val(),
+
           'invert_color': $('#invert_color').val()
         }
         return options;
@@ -100,20 +82,11 @@
           document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(saveOptions()));
         });
 
-        $('#gps_switch').val(getQueryVariable('use_gps')).change();
         $('#location').val(getQueryVariable('location'));
-        if (getQueryVariable('units') == "celsius") {
-          $('input:radio[name=units][value=celsius]').prop('checked', true).trigger("click");
-        } else {
-          $('input:radio[name=units][value=fahrenheit]').prop('checked', true).trigger("click");
-        }
+        
         $('#invert_color').val(getQueryVariable('invert_color')).change();
 
-        // Disable location field based on GPS toggle
-        $('#location').prop('disabled', $('#gps_switch').val() == "true");
-        $('#gps_switch').change(function() {
-          $('#location').prop('disabled', $('#gps_switch').val() == "true");
-        });
+       
       });
     </script>
   </body>
