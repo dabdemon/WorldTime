@@ -94,7 +94,42 @@ static int LAYER_ICONS[] = {
 	static char day_month[]= "31 SEPTEMBER"; 
 	static char time_text[] = "00:00"; 
 
+	//WORLD CLOCK
+	static char tz1_name[]="XXXXXXXXXXXXX";
+	int tz1_hours= 0;
+	int tz1_min=0;
+	static char tz2_name[]="XXXXXXXXXXXXX";
+	int tz2_hours= 0;
+	int tz2_min=0;
+	static char tz3_name[]="XXXXXXXXXXXXX";
+	int tz3_hours= 0;
+	int tz3_min=0;
+	static char tz4_name[]="XXXXXXXXXXXXX";
+	int tz4_hours= 0;
+	int tz4_min=0;
+	
+	static char TZ1[] = "00:00";
+	static char TZ2[] = "00:00";
+	static char TZ3[] = "00:00";
+	static char TZ4[] = "00:00";
+
 	bool translate_sp = true;
+
+enum TimeZoneKey {
+  TZ1Name_KEY = 0x0,        // TUPLE_CSTRING 
+  TZ1Hour_KEY = 0x1, 		// TUPLE_INT
+  TZ1Minute_KEY = 0x2,      // TUPLE_INT
+  TZ2Name_KEY = 0x3,        // TUPLE_CSTRING 
+  TZ2Hour_KEY = 0x4, 		// TUPLE_INT
+  TZ2Minute_KEY = 0x5,      // TUPLE_INT
+  TZ3Name_KEY = 0x6,        // TUPLE_CSTRING 
+  TZ3Hour_KEY = 0x7, 		// TUPLE_INT
+  TZ3Minute_KEY = 0x8,      // TUPLE_INT
+  TZ4Name_KEY = 0x9,        // TUPLE_CSTRING 
+  TZ4Hour_KEY = 0x10, 		// TUPLE_INT
+  TZ4Minute_KEY = 0x11,     // TUPLE_INT
+  INVERT_COLOR_KEY = 0x12,  // TUPLE_INT
+};
 
 //**************************//
 // Check the Battery Status //
@@ -152,6 +187,100 @@ static void handle_bluetooth(bool connected)
 
 
 } //handle_bluetooth
+
+
+
+//*****************//
+// AppSync options //
+//*****************//
+
+        static AppSync sync;
+        static uint8_t sync_buffer[256];
+
+
+
+        static void sync_tuple_changed_callback(const uint32_t key,
+                                        const Tuple* new_tuple,
+                                        const Tuple* old_tuple,
+                                        void* context) {
+
+        
+  // App Sync keeps new_tuple in sync_buffer, so we may use it directly
+  switch (key) {
+    case TZ1Name_KEY:
+  		persist_write_string(TZ1Name_KEY, new_tuple->value->cstring);
+	  	memcpy(&tz1_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
+	  	text_layer_set_text(WC1NAME_Layer, new_tuple->value->cstring);
+      	break;
+
+    case TZ1Hour_KEY:
+		tz1_hours = new_tuple->value->int8;	  
+	  	persist_write_int(TZ1Hour_KEY, tz1_hours);
+     	break;
+
+     case TZ1Minute_KEY:
+		tz1_min = new_tuple->value->int8;  
+	  	persist_write_int(TZ1Minute_KEY, tz1_min);
+      	break;
+	  
+	 case TZ2Name_KEY:
+  		persist_write_string(TZ2Name_KEY, new_tuple->value->cstring);
+	  	memcpy(&tz2_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
+	  	text_layer_set_text(WC2NAME_Layer, new_tuple->value->cstring);
+      	break;
+
+    case TZ2Hour_KEY:
+	  	persist_write_int(TZ2Hour_KEY, new_tuple->value->int8);
+		tz2_hours = new_tuple->value->int8;
+      	break;
+
+     case TZ2Minute_KEY:
+	  	persist_write_int(TZ2Minute_KEY, new_tuple->value->int8);
+		tz2_min = new_tuple->value->int8;
+      	break;
+	  
+	 case TZ3Name_KEY:
+  		persist_write_string(TZ3Name_KEY, new_tuple->value->cstring);
+	  	memcpy(&tz3_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
+	  	text_layer_set_text(WC3NAME_Layer, new_tuple->value->cstring);
+      	break;
+
+    case TZ3Hour_KEY:
+	  	persist_write_int(TZ3Hour_KEY, new_tuple->value->int8);
+		tz3_hours = new_tuple->value->int8;
+      	break;
+
+     case TZ3Minute_KEY:
+	  	persist_write_int(TZ3Minute_KEY, new_tuple->value->int8);
+		tz3_min = new_tuple->value->int8;
+      	break;
+
+	 case TZ4Name_KEY:
+  		persist_write_string(TZ4Name_KEY, new_tuple->value->cstring);
+	  	memcpy(&tz4_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
+	  	text_layer_set_text(WC4NAME_Layer, new_tuple->value->cstring);
+      	break;
+
+    case TZ4Hour_KEY:
+	  	persist_write_int(TZ4Hour_KEY, new_tuple->value->int8);
+		tz4_hours = new_tuple->value->int8;
+      	break;
+
+     case TZ4Minute_KEY:
+	  	persist_write_int(TZ4Minute_KEY, new_tuple->value->int8);
+		tz4_min = new_tuple->value->int8;
+      	break;
+
+
+	 case INVERT_COLOR_KEY:
+		  //color_inverted = new_tuple->value->uint8 != 0;
+		  persist_write_bool(INVERT_COLOR_KEY, new_tuple->value->uint8 != 0);
+
+	  	  //refresh the layout
+	  	  //InvertColors(color_inverted);
+		  break;
+  }
+}
 
 
 void TranslateDate(){
@@ -320,21 +449,28 @@ void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 
 
 			//WORLD CLOCK
+	/*
 			static char tz1_name[]="Gurgaon";
 			int tz1_hours= 4;
 			int tz1_min=30;
 			static char tz2_name[]="Buenos Aires";
 			int tz2_hours= -4;
+			int tz2_min=0;
 			static char tz3_name[]="Chicago";
 			int tz3_hours= -7;
+			int tz3_min=0;
 			static char tz4_name[]="San Francisco";
 			int tz4_hours= -9;
+			int tz4_min=0;
 
 			static char TZ1[] = "00:00";
 			static char TZ2[] = "00:00";
 			static char TZ3[] = "00:00";
 			static char TZ4[] = "00:00";
+*/
 
+		
+		
 			time_t actualPtr = time(NULL);
 
 			//Define and Calculate Time Zones
@@ -349,10 +485,15 @@ void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 					tz1Ptr->tm_min = tz1Ptr->tm_min - 60;
 				}
 
-
 				//try to fix the timezone when negative
+		
 				if (tz1Ptr->tm_hour <0){
 					tz1Ptr->tm_hour = 24 + tz1Ptr->tm_hour;
+				}
+		
+				//try to fix the timezone when more than 24
+				if (tz1Ptr->tm_hour >=24){
+					tz1Ptr->tm_hour = tz1Ptr->tm_hour - 24;
 				}
 
 				if (clock_is_24h_style()){strftime(TZ1, sizeof(TZ1), "%H:%M", tz1Ptr);}
@@ -360,10 +501,22 @@ void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 			//TIME ZONE 2
 				struct tm *tz2Ptr = gmtime(&actualPtr);
 				tz2Ptr->tm_hour += tz2_hours;
+				tz2Ptr->tm_min += tz2_min;
+		
+				//try to fix the timezone when half and hour diff
+				if (tz2Ptr->tm_min >=60){
+					tz2Ptr->tm_hour = 1 + tz2Ptr->tm_hour;
+					tz2Ptr->tm_min = tz2Ptr->tm_min - 60;
+				}
 
 				//try to fix the timezone when negative
 				if (tz2Ptr->tm_hour <0){
 					tz2Ptr->tm_hour = 24 + tz2Ptr->tm_hour;
+				}
+		
+				//try to fix the timezone when more than 24
+				if (tz2Ptr->tm_hour >=24){
+					tz2Ptr->tm_hour = tz2Ptr->tm_hour - 24;
 				}
 
 				if (clock_is_24h_style()){strftime(TZ2, sizeof(TZ2), "%H:%M", tz2Ptr);}
@@ -371,23 +524,47 @@ void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 			//TIME ZONE 3		
 				struct tm *tz3Ptr = gmtime(&actualPtr);
 				tz3Ptr->tm_hour += tz3_hours;
+				tz3Ptr->tm_min += tz3_min;
+		
+				//try to fix the timezone when half and hour diff
+				if (tz3Ptr->tm_min >=60){
+					tz3Ptr->tm_hour = 1 + tz3Ptr->tm_hour;
+					tz3Ptr->tm_min = tz3Ptr->tm_min - 60;
+				}
 
 				//try to fix the timezone when negative
 				if (tz3Ptr->tm_hour <0){
 					tz3Ptr->tm_hour = 24 + tz3Ptr->tm_hour;
 				}
 
+				//try to fix the timezone when more than 24
+				if (tz3Ptr->tm_hour >=24){
+					tz3Ptr->tm_hour = tz3Ptr->tm_hour - 24;
+				}
+		
 				if (clock_is_24h_style()){strftime(TZ3, sizeof(TZ3), "%H:%M", tz3Ptr);}
 				else{strftime(TZ3, sizeof(TZ3), "%I:%M", tz3Ptr);}
 			//TIME ZONE 4
 				struct tm *tz4Ptr = gmtime(&actualPtr);
 				tz4Ptr->tm_hour += tz4_hours;
+				tz4Ptr->tm_min += tz4_min;
+		
+				//try to fix the timezone when half and hour diff
+				if (tz4Ptr->tm_min >=60){
+					tz4Ptr->tm_hour = 1 + tz4Ptr->tm_hour;
+					tz4Ptr->tm_min = tz4Ptr->tm_min - 60;
+				}
 
 				//try to fix the timezone when negative
 				if (tz4Ptr->tm_hour <0){
 					tz4Ptr->tm_hour = 24 + tz4Ptr->tm_hour;
 				}
 
+				//try to fix the timezone when more than 24
+				if (tz4Ptr->tm_hour >=24){
+					tz4Ptr->tm_hour = tz4Ptr->tm_hour - 24;
+				}
+		
 				if (clock_is_24h_style()){strftime(TZ4, sizeof(TZ4), "%H:%M", tz4Ptr);}
 				else{strftime(TZ4, sizeof(TZ4), "%I:%M", tz4Ptr);}
 
@@ -426,6 +603,47 @@ void handle_init(void)
 	ResHandle res_u;
 	ResHandle res_t;
 	ResHandle res_temp;
+	
+	
+		         // Setup messaging
+                const int inbound_size = 256;
+                const int outbound_size = 256;
+	
+                app_message_open(inbound_size, outbound_size);
+
+                Tuplet initial_values[] = {
+                TupletCString(TZ1Name_KEY, ""),
+				TupletInteger(TZ1Hour_KEY, (int8_t) 0), 
+                TupletInteger(TZ1Minute_KEY, (int8_t) 0),
+				TupletCString(TZ2Name_KEY, ""),
+				TupletInteger(TZ2Hour_KEY, (int8_t) 0), 
+                TupletInteger(TZ2Minute_KEY, (int8_t) 0),
+				TupletCString(TZ3Name_KEY, ""),
+				TupletInteger(TZ3Hour_KEY, (int8_t) 0), 
+                TupletInteger(TZ3Minute_KEY, (int8_t) 0),
+				TupletCString(TZ4Name_KEY, ""),
+				TupletInteger(TZ4Hour_KEY, (int8_t) 0), 
+                TupletInteger(TZ4Minute_KEY, (int8_t) 0),
+				TupletInteger(INVERT_COLOR_KEY, persist_read_bool(INVERT_COLOR_KEY)),
+                }; //TUPLET INITIAL VALUES
+        
+                app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values,
+                ARRAY_LENGTH(initial_values), sync_tuple_changed_callback,
+                NULL, NULL);
+	
+			// read saved settings
+			persist_read_string(TZ1Name_KEY, tz1_name, sizeof(tz1_name));
+			tz1_hours=persist_read_int(TZ1Hour_KEY);
+			tz1_min=persist_read_int(TZ1Minute_KEY);
+			persist_read_string(TZ2Name_KEY, tz2_name, sizeof(tz2_name));
+			tz2_hours=persist_read_int(TZ2Hour_KEY);
+			tz2_min=persist_read_int(TZ2Minute_KEY);
+			persist_read_string(TZ3Name_KEY, tz3_name, sizeof(tz3_name));
+			tz3_hours=persist_read_int(TZ3Hour_KEY);
+			tz3_min=persist_read_int(TZ3Minute_KEY);
+			persist_read_string(TZ4Name_KEY, tz4_name, sizeof(tz4_name));
+			tz4_hours=persist_read_int(TZ4Hour_KEY);
+			tz4_min=persist_read_int(TZ4Minute_KEY);
 
 	//Create the main window
 	my_window = window_create(); 
