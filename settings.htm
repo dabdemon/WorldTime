@@ -27,14 +27,14 @@
 </div>
 
 
-
+<p>Time Zone 1</p>
 
         <div data-role="fieldcontain">
-          <label for="location">Location</label>
-          <input type="text" name="location" id="location" value="" />
+          <label for="TZ1Name">Name</label>
+          <input type="text" name="TZ1Name" id="TZ1Name" value="" />
         </div>
 
-
+<p>Time Zone 2</p>
         
         <div data-role="fieldcontain">
           <label for="invert_color">Invert Colors</label>
@@ -67,7 +67,7 @@
 
       function saveOptions() {
        var options = {
-          'location': $('#location').val(),
+          'TZ1Name': $('#TZ1Name').val(),
 
           'invert_color': $('#invert_color').val()
         }
@@ -82,7 +82,7 @@
           document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(saveOptions()));
         });
 
-        $('#location').val(getQueryVariable('location'));
+        $('#TZ1Name').val(getQueryVariable('TZ1Name'));
         
         $('#invert_color').val(getQueryVariable('invert_color')).change();
 
