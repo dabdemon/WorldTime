@@ -27,17 +27,29 @@
 </div>
 
 
-<p><b></b>Time Zone 1:</b></p>
+<p><b>Time Zone 1:</b></p>
 
         <div data-role="fieldcontain">
           <label for="TZ1Name">Name</label>
           <input type="text" name="TZ1Name" id="TZ1Name" value="" />
         </div>
 
-<p><b></b>Time Zone 2:</b></p>
+<p><b>Time Zone 2:</b></p>
         <div data-role="fieldcontain">
           <label for="TZ2Name">Name</label>
           <input type="text" name="TZ2Name" id="TZ2Name" value="" />
+        </div>
+
+<p><b>Time Zone 3:</b></p>
+        <div data-role="fieldcontain">
+          <label for="TZ3Name">Name</label>
+          <input type="text" name="TZ3Name" id="TZ3Name" value="" />
+        </div>
+
+<p><b>Time Zone 4:</b></p>
+        <div data-role="fieldcontain">
+          <label for="TZ4Name">Name</label>
+          <input type="text" name="TZ4Name" id="TZ4Name" value="" />
         </div>
         
         <div data-role="fieldcontain">
@@ -73,6 +85,8 @@
        var options = {
           'TZ1Name': $('#TZ1Name').val(),
           'TZ2Name': $('#TZ2Name').val(),
+          'TZ3Name': $('#TZ3Name').val(),
+          'TZ4Name': $('#TZ4Name').val(),
           'invert_color': $('#invert_color').val()
         }
         return options;
@@ -88,7 +102,8 @@
 
         $('#TZ1Name').val(getQueryVariable('TZ1Name'));
         $('#TZ2Name').val(getQueryVariable('TZ2Name'));
-        
+        $('#TZ3Name').val(getQueryVariable('TZ3Name'));
+        $('#TZ4Name').val(getQueryVariable('TZ4Name'));
         $('#invert_color').val(getQueryVariable('invert_color')).change();
 
        
