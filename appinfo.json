@@ -1,6 +1,6 @@
 {
     "versionLabel": "1.0",
-    "uuid": "4296c359-6177-4d96-b1a4-262bf90b7af9",
+    "uuid": "4e2ae2a7-ad7e-4955-a228-13ec4179dd35",
     "appKeys": {
         "TZ3Min": 8,
         "TZ2Min": 5,
@@ -8,11 +8,8 @@
         "TZ2Name": 3,
         "TZ1Min": 2,
         "TZ3Hour": 7,
-        "invert_color": 12,
+        "invert_color": 9,
         "TZ1Name": 0,
-        "TZ4Name": 9,
-        "TZ4Hour": 10,
-        "TZ4Min": 11,
         "TZ1Hour": 1,
         "TZ3Name": 6
     },
@@ -29,19 +26,36 @@
     "resources": {
         "media": [
             {
+                "type": "png",
+                "name": "BATT_CHARw",
+                "file": "images/batt_charw_2.png"
+            },
+            {
+                "type": "png",
+                "name": "BATT_EMPTYw",
+                "file": "images/batt_emptyw.png"
+            },
+            {
+                "type": "png",
+                "name": "BT_CONNECTEDw",
+                "file": "images/bluetooth_white_smallw.png"
+            },
+            {
                 "characterRegex": "[0-9:]",
                 "type": "font",
                 "name": "FUTURA_CONDENSED_53",
                 "file": "fonts/futura_condensed_bold-webfont.ttf"
             },
             {
+                "characterRegex": "[0-9A-Za-z: ]",
                 "type": "font",
-                "name": "FUTURA_14",
+                "name": "FUTURA_17",
                 "file": "fonts/futura.ttf"
             },
             {
+                "characterRegex": "[0-9A-Za-z: ]",
                 "type": "font",
-                "name": "FUTURA_17",
+                "name": "FUTURA_14",
                 "file": "fonts/futura.ttf"
             },
             {

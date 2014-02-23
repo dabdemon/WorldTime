@@ -10,9 +10,9 @@ if (options === null) options = { "TZ1Name" : "Gurgaon",
 								  "TZ3Name" : "Chicago",
 								  "TZ3Hour" : -7,
 								  "TZ3Minute": 0,
-								  "TZ4Name" : "San Francisco",
-								  "TZ4Hour" : -9,
-								  "TZ4Minute": 0,
+								 // "TZ4Name" : "San Francisco",
+								 // "TZ4Hour" : -9,
+								 // "TZ4Minute": 0,
 								  "invert_color" : "false"};
 
 
@@ -23,16 +23,16 @@ function ReturnTimeZones() {
           Pebble.sendAppMessage({
 			"TZ1Name" : options['TZ1Name'],
 			"TZ1Hour" : parseInt(options['TZ1Hour']),
-			"TZ1Minute": parseInt(options['TZ1Minute']),
+			"TZ1Min": parseInt(options['TZ1Minute']),
 			"TZ2Name" : options['TZ2Name'],
 			"TZ2Hour" : parseInt(options['TZ2Hour']),
-			"TZ2Minute": parseInt(options['TZ2Minute']),
+			"TZ2Min": parseInt(options['TZ2Minute']),
 			"TZ3Name" : options['TZ3Name'],
 			"TZ3Hour" : parseInt(options['TZ3Hour']),
-			"TZ3Minute": parseInt(options['TZ3Minute']),
-			"TZ4Name" : options['TZ4Name'],
-			"TZ4Hour" : parseInt(options['TZ4Hour']),
-			"TZ4Minute": parseInt(options['TZ4Minute']),
+			"TZ3Min": parseInt(options['TZ3Minute']),
+			//"TZ4Name" : options['TZ4Name'],
+			//"TZ4Hour" : parseInt(options['TZ4Hour']),
+			//"TZ4Min": parseInt(options['TZ4Minute']),
 			 "invert_color" : (options["invert_color"] == "true" ? 1 : 0),
           });
 
@@ -49,9 +49,9 @@ Pebble.addEventListener('showConfiguration', function(e) {
 	'&TZ3Name=' + encodeURIComponent(options['TZ3Name']) +
     '&TZ3Hour=' + encodeURIComponent(options['TZ3Hour']) +
     '&TZ3Minute=' + encodeURIComponent(options['TZ3Minute']) +
-	'&TZ4Name=' + encodeURIComponent(options['TZ4Name']) +
-    '&TZ4Hour=' + encodeURIComponent(options['TZ4Hour']) +
-    '&TZ4Minute=' + encodeURIComponent(options['TZ4Minute']) +
+	//'&TZ4Name=' + encodeURIComponent(options['TZ4Name']) +
+    //'&TZ4Hour=' + encodeURIComponent(options['TZ4Hour']) +
+    //'&TZ4Minute=' + encodeURIComponent(options['TZ4Minute']) +
     '&invert_color=' + encodeURIComponent(options['invert_color']);
 
 	//console.log('showing configuration at uri: ' + uri);
