@@ -98,13 +98,21 @@ static int LAYER_ICONS[] = {
 	static char time_text[] = "00:00"; 
 
 	//WORLD CLOCK
+	int intLocalTime  = 0;
+	int local_hours= 0;
+	int local_min=0;
+	int TZ_min=0;
+
 	static char tz1_name[]="XXXXXXXXXXXXX";
+	int intTZ1  = 0;
 	int tz1_hours= 0;
 	int tz1_min=0;
 	static char tz2_name[]="XXXXXXXXXXXXX";
+	int intTZ2  = 0;
 	int tz2_hours= 0;
 	int tz2_min=0;
 	static char tz3_name[]="XXXXXXXXXXXXX";
+	int intTZ3  = 0;
 	int tz3_hours= 0;
 	int tz3_min=0;
 	
@@ -112,21 +120,59 @@ static int LAYER_ICONS[] = {
 	static char TZ2[] = "00:00";
 	static char TZ3[] = "00:00";
 
-	bool translate_sp = false;
+	bool translate_sp = true;
+	static char language[] = "E";
+	int intLanguage = 100;
 	bool color_inverted = false;
 
 enum TimeZoneKey {
-  TZ1Name_KEY = 0x0,        // TUPLE_CSTRING 
-  TZ1Hour_KEY = 0x1,      // TUPLE_INT
-  TZ1Min_KEY = 0x2,      // TUPLE_INT
-  TZ2Name_KEY = 0x3,        // TUPLE_CSTRING 
-  TZ2Hour_KEY = 0x4,      // TUPLE_INT
-  TZ2Min_KEY = 0x5,      // TUPLE_INT
+  Language_KEY = 0x0,        // TUPLE_INT
+  LocalTime_KEY = 0x1,        // TUPLE_INT
+  TZ1Name_KEY = 0x2,        // TUPLE_CSTRING 
+  TZ1Time_KEY = 0x3,      // TUPLE_INT
+  TZ2Name_KEY = 0x4,        // TUPLE_CSTRING 
+  TZ2Time_KEY = 0x5,      // TUPLE_INT
   TZ3Name_KEY = 0x6,        // TUPLE_CSTRING 
-  TZ3Hour_KEY = 0x7,      // TUPLE_INT
-  TZ3Min_KEY = 0x8,      // TUPLE_INT
-  INVERT_COLOR_KEY = 0x9,  // TUPLE_INT
+  TZ3Time_KEY = 0x7,      // TUPLE_INT
+  INVERT_COLOR_KEY = 0x8,  // TUPLE_INT
 };
+
+static const uint32_t TimeZones[] = {
+	-12,//(GMT -12:00) Eniwetok, Kwajalein
+	-11,//(GMT -11:00) Midway Island, Samoa
+	-10,//(GMT -10:00) Hawaii
+	-9,// (GMT -9:00) Alaska
+	-8,// (GMT -8:00) Pacific Time (US & Canada)
+	-7,// (GMT -7:00) Mountain Time (US & Canada)
+	-6,// (GMT -6:00) Central Time (US & Canada), Mexico City
+	-5,// (GMT -5:00) Eastern Time (US & Canada), Bogota, Lima
+	-4,// (GMT -4:30) Caracas
+	-4,// (GMT -4:00) Atlantic Time (Canada), La Paz, Santiago
+	-3,// (GMT -3:30) Newfoundland
+	-3,// (GMT -3:00) Brazil, Buenos Aires, Georgetown
+	-2,// (GMT -2:00) Mid-Atlantic
+	-1,// (GMT -1:00 hour) Azores, Cape Verde Islands
+	0, // (GMT) Western Europe Time, London, Lisbon, Casablanca
+	1, // (GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris
+	2, // (GMT +2:00) South Africa, Cairo
+	3, // (GMT +3:00) Baghdad, Riyadh, Kaliningrad
+	3, // (GMT +3:30) Tehran
+	4, // (GMT +4:00) Abu Dhabi, Muscat, Yerevan, Baku, Tbilisi, Moscow, St. Petersburg
+	4, // (GMT +4:30) Kabul
+	5, // (GMT +5:00) Islamabad, Karachi, Tashkent
+	5, // (GMT +5:30) Mumbai, Kolkata, Chennai, New Delhi
+	5, // (GMT +5:45) Kathmandu
+	6, // (GMT +6:00) Almaty, Dhaka, Colombo, Ekaterinburg
+	6, // (GMT +6:30) Yangon, Cocos Islands
+	7, // (GMT +7:00) Bangkok, Hanoi, Jakarta
+	8, // (GMT +8:00) Beijing, Perth, Singapore, Hong Kong
+	9, // (GMT +9:00) Tokyo, Seoul, Osaka, Sapporo
+	9, // (GMT +9:30) Adelaide, Darwin
+	10,// (GMT +10:00) Eastern Australia, Guam, Yakutsk
+	11,// (GMT +11:00) Magadan, Solomon Islands, New Caledonia, Vladivostok
+	12,// (GMT +12:00) Auckland, Wellington, Fiji, Kamchatka
+};
+
 
 //**************************//
 // Check the Battery Status //
@@ -244,80 +290,6 @@ void InvertColors(bool inverted)
 }// END - Inver colors
 
 
-//*****************//
-// AppSync options //
-//*****************//
-
-        static AppSync sync;
-        static uint8_t sync_buffer[512];
-
-
-
-        static void sync_tuple_changed_callback(const uint32_t key,
-                                        const Tuple* new_tuple,
-                                        const Tuple* old_tuple,
-                                        void* context) {
-
-        
-  // App Sync keeps new_tuple in sync_buffer, so we may use it directly
-  switch (key) {
-    case TZ1Name_KEY:
-  		persist_write_string(TZ1Name_KEY, new_tuple->value->cstring);
-	  	memcpy(&tz1_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
-	  	text_layer_set_text(WC1NAME_Layer, new_tuple->value->cstring);
-      	break;
-	  
-     case TZ1Hour_KEY:
-	  	tz1_hours = new_tuple->value->int8;  
-	  	persist_write_int(TZ1Hour_KEY, tz1_hours);
-      	break;
-	  
-     case TZ1Min_KEY:
-	  	tz1_min = new_tuple->value->int8;  
-	  	persist_write_int(TZ1Min_KEY, tz1_min);
-      	break;
-	  
-	 case TZ2Name_KEY:
-  		persist_write_string(TZ2Name_KEY, new_tuple->value->cstring);
-	  	memcpy(&tz2_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
-	  	text_layer_set_text(WC2NAME_Layer, new_tuple->value->cstring);
-      	break;
-
-	case TZ2Hour_KEY:
-	  	tz2_hours = new_tuple->value->int8;
-	  	persist_write_int(TZ2Hour_KEY, tz2_hours);
-      	break;
-	  
-     case TZ2Min_KEY:
-	  	tz2_min = new_tuple->value->int8;
-	  	persist_write_int(TZ2Min_KEY, tz2_min);
-      	break;
-	  
-	 case TZ3Name_KEY:
-  		persist_write_string(TZ3Name_KEY, new_tuple->value->cstring);
-	  	memcpy(&tz3_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
-	  	text_layer_set_text(WC3NAME_Layer, new_tuple->value->cstring);
-      	break;
-
-	 case TZ3Hour_KEY:
-		tz3_hours = new_tuple->value->int8;
-	  	persist_write_int(TZ3Hour_KEY, tz3_hours);
-      	break;
-
-     case TZ3Min_KEY:
-		tz3_min = new_tuple->value->int8;
-	  	persist_write_int(TZ3Min_KEY, tz3_min);
-      	break;
-
-	 case INVERT_COLOR_KEY:
-		  color_inverted = new_tuple->value->uint8 != 0;
-		  persist_write_bool(INVERT_COLOR_KEY, new_tuple->value->uint8 != 0);
-	  		
-	  	  //refresh the layout
-	  	  InvertColors(color_inverted);
-		  break;
-  }
-}
 
 
 void TranslateDate(){
@@ -424,91 +396,53 @@ void TranslateDate(){
 
 }
 
-
-
-//************************//
-// Capture the Tick event //
-//************************//
-void handle_tick(struct tm *tick_time, TimeUnits units_changed)
+//**************************//
+//** Get the current date **//
+//**************************//
+void getDate()
 {
-
-	//time_t lnow = time(NULL);
-	struct tm local_time;
-
-//Init the date
-
-				//Get the Weekday
-				strftime(weekday_text,sizeof(weekday_text),"%A",tick_time);
-				//Get the Month + Day (English format)
-				 strftime(month_text,sizeof(month_text),"%B %e",tick_time);
-				//Get the Day + Month (Spanish format)
-				strftime(day_month,sizeof(day_month),"%e %B",tick_time);
-
-
-				if(translate_sp){
-					//Get the Month
-					strftime(month_text,sizeof(month_text),"%B",tick_time);
-					//Get the day
-					strftime(day_text,sizeof(day_text),"%e",tick_time);
-					//Translate to Spanish
-					TranslateDate();
-
-					//Concatenate the day to the month
-					memcpy(&month_text, day_text, strlen(day_text));
-				}
-
-
-				text_layer_set_text(date_layer, month_text);
-				text_layer_set_text(Weekday_Layer, weekday_text); //Update the weekday layer	
-
-
-	if (units_changed & MINUTE_UNIT) 
-	{
-
-			/*
-			if (units_changed & DAY_UNIT)
-			{	
-			} // DAY CHANGES
-			*/
-
-			//Format the Local Time	
-			if (clock_is_24h_style())
-			{
-				strftime(time_text, sizeof(time_text), "%H:%M", tick_time);
-			}
-			else
-			{
-				strftime(time_text, sizeof(time_text), "%I:%M", tick_time);
-			}
-
-
-  			text_layer_set_text(Time_Layer, time_text);
-
-
-			//WORLD CLOCK
-	/*
-			static char tz1_name[]="Gurgaon";
-			int tz1_hours= 4;
-			int tz1_min=30;
-			static char tz2_name[]="Buenos Aires";
-			int tz2_hours= -4;
-			int tz2_min=0;
-			static char tz3_name[]="Chicago";
-			int tz3_hours= -7;
-			int tz3_min=0;
-			static char tz4_name[]="San Francisco";
-			int tz4_hours= -9;
-			int tz4_min=0;
-
-			static char TZ1[] = "00:00";
-			static char TZ2[] = "00:00";
-			static char TZ3[] = "00:00";
-			static char TZ4[] = "00:00";
-*/
-
+	
+	//Get the date
+	time_t actualPtr = time(NULL);
+	struct tm *tz1Ptr = gmtime(&actualPtr);
+	
+	//Get the Weekday
+	strftime(weekday_text,sizeof(weekday_text),"%A",tz1Ptr);
+	//Get the Month + Day (English format)
+	strftime(month_text,sizeof(month_text),"%B %e",tz1Ptr);
+	//Get the Day + Month (Spanish format)
+	strftime(day_month,sizeof(day_month),"%e %B",tz1Ptr);
+	
+	
+	if(language[0] != '0'){
+		//Get the Month
+		strftime(month_text,sizeof(month_text),"%B",tz1Ptr);
+		//Get the day
+		strftime(day_text,sizeof(day_text),"%e",tz1Ptr);
+		//Translate to Spanish
+		TranslateDate();
 		
-		
-			time_t actualPtr = time(NULL);
+		if(translate_sp){ 
+		//Concatenate the day to the month
+		//If Czech the month is before day
+		if (language[0] == 'C'){strncat(month_text,day_text,strlen(day_text));}
+		else {memcpy(&month_text, day_text, strlen(day_text));}    
+		}
+		else{
+		//Keep the Month + Day (English format)
+		strftime(month_text,sizeof(month_text),"%B %e",tz1Ptr);
+		}
+	}
+	
+	
+	text_layer_set_text(date_layer, month_text);
+	text_layer_set_text(Weekday_Layer, weekday_text); //Update the weekday layer    
+	
+}
+
+void getTimeZones(){
+	
+	time_t actualPtr = time(NULL);
 
 			//Define and Calculate Time Zones
 			//TIME ZONE 1
@@ -610,7 +544,206 @@ void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 
 			text_layer_set_text(WC3NAME_Layer, tz3_name);
 			text_layer_set_text(WC3TIME_Layer, TZ3);
+}
+/*********************************************************************************/
+/* Calculate the difference in hours and minutes between the local and dual zone */
+/*********************************************************************************/
+void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
+	
+	//Get the Local hours
+	local_hours= TimeZones[LocalZone];
+	local_min=0;
 
+	//Adjust the minutes
+	//LocalZone
+	if ((LocalZone == 8)||(LocalZone == 10)){local_min=-30;}
+	else if ((LocalZone == 18)||(LocalZone == 20)||(LocalZone == 25)||(LocalZone == 29)){local_min=30;}
+	else if (LocalZone == 23){local_min=45;}
+	//TimeZone
+	TZ_min = 0;
+	if ((GMT == 8)||(GMT == 10)){TZ_min=-30;}
+	else if ((GMT == 18)||(GMT == 20)||(GMT == 25)||(GMT == 29)){TZ_min=30;}
+	else if (GMT == 23){TZ_min=45;}
+	
+	//Get Number of hours
+	if (TimeZone == 1){
+			tz1_hours= TimeZones[GMT] - local_hours;
+			tz1_min=0 + TZ_min;
+	}
+	else if (TimeZone == 2){
+			tz2_hours= TimeZones[GMT] - local_hours;
+			tz2_min=0 + TZ_min;
+	}
+	else if (TimeZone == 3){
+			tz3_hours= TimeZones[GMT] - local_hours;
+			tz3_min=0 + TZ_min;
+	}
+	
+
+}
+
+//*****************//
+// AppSync options //
+//*****************//
+
+        static AppSync sync;
+        static uint8_t sync_buffer[128];
+
+
+
+        static void sync_tuple_changed_callback(const uint32_t key,
+                                        const Tuple* new_tuple,
+                                        const Tuple* old_tuple,
+                                        void* context) {
+
+        
+  // App Sync keeps new_tuple in sync_buffer, so we may use it directly
+  switch (key) {
+      case Language_KEY:
+	  	intLanguage = new_tuple->value->int8;  
+	  	persist_write_int(Language_KEY, intLanguage);
+      	break;
+	  
+	  case LocalTime_KEY:
+	  	intLocalTime = new_tuple->value->int8;  
+	  	persist_write_int(LocalTime_KEY, intLocalTime);
+      	break;
+	  
+    case TZ1Name_KEY:
+  		persist_write_string(TZ1Name_KEY, new_tuple->value->cstring);
+	  	memcpy(&tz1_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
+	  	text_layer_set_text(WC1NAME_Layer, tz1_name);
+      	break;
+	  
+     case TZ1Time_KEY:
+	  	intTZ1 = new_tuple->value->int8;  
+	  	persist_write_int(TZ1Time_KEY, intTZ1);
+	  	
+	  	CalculateTimeZone (intLocalTime,1,intTZ1);
+	  	getTimeZones();
+      	break;
+	  
+	 case TZ2Name_KEY:
+  		persist_write_string(TZ2Name_KEY, new_tuple->value->cstring);
+	  	memcpy(&tz2_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
+	  	text_layer_set_text(WC2NAME_Layer, tz2_name);
+      	break;
+
+     case TZ2Time_KEY:
+	  	intTZ2 = new_tuple->value->int8;
+	  	persist_write_int(TZ2Time_KEY, intTZ2);
+	  
+	  	CalculateTimeZone (intLocalTime,2,intTZ2);
+	    getTimeZones();
+      	break;
+	  
+	 case TZ3Name_KEY:
+  		persist_write_string(TZ3Name_KEY, new_tuple->value->cstring);
+	  	memcpy(&tz3_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
+	  	text_layer_set_text(WC3NAME_Layer, tz3_name);
+      	break;
+
+     case TZ3Time_KEY:
+		intTZ3 = new_tuple->value->int8;
+	  	persist_write_int(TZ3Time_KEY, intTZ3);
+	  
+	  	CalculateTimeZone (intLocalTime,3,intTZ3);
+	    getTimeZones();
+      	break;
+
+	 case INVERT_COLOR_KEY:
+		  color_inverted = new_tuple->value->uint8 != 0;
+		  persist_write_bool(INVERT_COLOR_KEY, new_tuple->value->uint8 != 0);
+	  		
+	  	  //refresh the layout
+	  	  InvertColors(color_inverted);
+		  break;
+  }
+}
+
+//************************//
+// Capture the Tick event //
+//************************//
+void handle_tick(struct tm *tick_time, TimeUnits units_changed)
+{
+
+	//time_t lnow = time(NULL);
+	struct tm local_time;
+
+//Init the date
+
+				//Get the Weekday
+				strftime(weekday_text,sizeof(weekday_text),"%A",tick_time);
+				//Get the Month + Day (English format)
+				 strftime(month_text,sizeof(month_text),"%B %e",tick_time);
+				//Get the Day + Month (Spanish format)
+				strftime(day_month,sizeof(day_month),"%e %B",tick_time);
+
+
+				if(translate_sp){
+					//Get the Month
+					strftime(month_text,sizeof(month_text),"%B",tick_time);
+					//Get the day
+					strftime(day_text,sizeof(day_text),"%e",tick_time);
+					//Translate to Spanish
+					TranslateDate();
+
+					//Concatenate the day to the month
+					memcpy(&month_text, day_text, strlen(day_text));
+				}
+
+
+				text_layer_set_text(date_layer, month_text);
+				text_layer_set_text(Weekday_Layer, weekday_text); //Update the weekday layer	
+
+
+	if (units_changed & MINUTE_UNIT) 
+	{
+
+			/*
+			if (units_changed & DAY_UNIT)
+			{	
+			} // DAY CHANGES
+			*/
+		
+		
+			//Format the Local Time	
+			if (clock_is_24h_style())
+			{
+				strftime(time_text, sizeof(time_text), "%H:%M", tick_time);
+			}
+			else
+			{
+				strftime(time_text, sizeof(time_text), "%I:%M", tick_time);
+			}
+
+
+  			text_layer_set_text(Time_Layer, time_text);
+
+
+			//WORLD CLOCK
+	/*
+			static char tz1_name[]="Gurgaon";
+			int tz1_hours= 4;
+			int tz1_min=30;
+			static char tz2_name[]="Buenos Aires";
+			int tz2_hours= -4;
+			int tz2_min=0;
+			static char tz3_name[]="Chicago";
+			int tz3_hours= -7;
+			int tz3_min=0;
+			static char tz4_name[]="San Francisco";
+			int tz4_hours= -9;
+			int tz4_min=0;
+
+			static char TZ1[] = "00:00";
+			static char TZ2[] = "00:00";
+			static char TZ3[] = "00:00";
+			static char TZ4[] = "00:00";
+*/
+
+			//Calculate the Dual Time
+			getTimeZones();
 
 			//Check Battery Status
 			handle_battery(battery_state_service_peek());
@@ -619,6 +752,9 @@ void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 			handle_bluetooth(bluetooth_connection_service_peek());
 
 	} //MINUTE CHANGES
+	     if (units_changed & DAY_UNIT){
+			 	//Update the date
+			 	getDate();}
 } //HANDLE_TICK 
 
 
@@ -635,42 +771,43 @@ void handle_init(void)
 	ResHandle res_t;
 	ResHandle res_temp;
 	
+
 	
 		         // Setup messaging
-                const int inbound_size = 512;
-                const int outbound_size = 512;
+                const int inbound_size = 128;
+                const int outbound_size = 128;
 	
                 app_message_open(inbound_size, outbound_size);
-
-                Tuplet initial_values[] = {
+	                
+    
+				Tuplet initial_values[] = {
+				TupletInteger(Language_KEY, (int8_t) 100), //Default to english
+				TupletInteger(LocalTime_KEY, (int8_t) 15), //Default to Madrid
                 TupletCString(TZ1Name_KEY, ""),
-				TupletInteger(TZ1Hour_KEY, (int8_t) 0), 
-                TupletInteger(TZ1Min_KEY, (int8_t) 0),
+                TupletInteger(TZ1Time_KEY, (int8_t) 0),
 				TupletCString(TZ2Name_KEY, ""),
-				TupletInteger(TZ2Hour_KEY, (int8_t) 0), 
-                TupletInteger(TZ2Min_KEY, (int8_t) 0),
+                TupletInteger(TZ2Time_KEY, (int8_t) 0),
 				TupletCString(TZ3Name_KEY, ""),
-				TupletInteger(TZ3Hour_KEY, (int8_t) 0), 
-                TupletInteger(TZ3Min_KEY, (int8_t) 0),
+                TupletInteger(TZ3Time_KEY, (int8_t) 0),
 				TupletInteger(INVERT_COLOR_KEY, persist_read_bool(INVERT_COLOR_KEY)),
                 }; //TUPLET INITIAL VALUES
-        
+	
+
+       
                 app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values,
                 ARRAY_LENGTH(initial_values), sync_tuple_changed_callback,
                 NULL, NULL);
 	
 			// read saved settings
+			intLanguage=persist_read_int(Language_KEY);
+			intLocalTime=persist_read_int(LocalTime_KEY);
 			persist_read_string(TZ1Name_KEY, tz1_name, sizeof(tz1_name));
-			tz1_hours=persist_read_int(TZ1Hour_KEY);
-			tz1_min=persist_read_int(TZ1Min_KEY);
+			intTZ1=persist_read_int(TZ1Time_KEY);
 			persist_read_string(TZ2Name_KEY, tz2_name, sizeof(tz2_name));
-			tz2_hours=persist_read_int(TZ2Hour_KEY);
-			tz2_min=persist_read_int(TZ2Min_KEY);
+			intTZ2=persist_read_int(TZ2Time_KEY);
 			persist_read_string(TZ3Name_KEY, tz3_name, sizeof(tz3_name));
-			tz3_hours=persist_read_int(TZ3Hour_KEY);
-			tz3_min=persist_read_int(TZ3Min_KEY);
+			intTZ3=persist_read_int(TZ3Time_KEY);
 			color_inverted = persist_read_bool(INVERT_COLOR_KEY);
-
 
 	//Create the main window
 	my_window = window_create(); 
@@ -688,7 +825,6 @@ void handle_init(void)
     font_date = fonts_load_custom_font(res_d);
 	font_update = fonts_load_custom_font(res_u);
 	font_time = fonts_load_custom_font(res_t);
-
 
 
 	//LOAD THE LAYERS
@@ -798,8 +934,8 @@ void handle_deinit(void)
  	battery_state_service_unsubscribe();
   	bluetooth_connection_service_unsubscribe();
 
-	if (BT_image) {gbitmap_destroy(BT_image);}
-	if (Batt_image){gbitmap_destroy(Batt_image);}
+	//if (BT_image) {gbitmap_destroy(BT_image);}
+	//if (Batt_image){gbitmap_destroy(Batt_image);}
 
 	//Deallocate layers
 	text_layer_destroy(Time_Layer);
