@@ -557,12 +557,12 @@ void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
 	//Adjust the minutes
 	//LocalZone
 	if ((LocalZone == 8)||(LocalZone == 10)){local_min=-30;}
-	else if ((LocalZone == 18)||(LocalZone == 20)||(LocalZone == 25)||(LocalZone == 29)){local_min=30;}
+	else if ((LocalZone == 18)||(LocalZone == 20)||(LocalZone == 22)||(LocalZone == 25)||(LocalZone == 29)){local_min=30;}
 	else if (LocalZone == 23){local_min=45;}
 	//TimeZone
 	TZ_min = 0;
 	if ((GMT == 8)||(GMT == 10)){TZ_min=-30;}
-	else if ((GMT == 18)||(GMT == 20)||(GMT == 25)||(GMT == 29)){TZ_min=30;}
+	else if ((GMT == 18)||(GMT == 20)||(GMT ==22)||(GMT == 25)||(GMT == 29)){TZ_min=30;}
 	else if (GMT == 23){TZ_min=45;}
 	
 	//Get Number of hours
