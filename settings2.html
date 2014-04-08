@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css' />
+    <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+    <script src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js'></script>
+    <style>
+      .ui-header .ui-title { margin-left: 1em; margin-right: 1em; text-overflow: clip; }
+      /*.ui-radio { width: 50%; }*/
+    </style>
+  </head>
+  <body>
+    <div data-role='page' id='main'>
+      <div data-role='header' class='jqm-header' data-theme='b'>
+              <H1>World Time</H1>
+      </div>
+      
+
+      <div data-role='content'>
+
+
+<div>
+<br> 
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=pebbleweather%40gmail%2ecom&lc=ES&item_name=World%20Time&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"></a>
+</div>
+
+        <div data-role="fieldcontain">
+          <label for="language">Language</label>
+          <select name="language"  id="language" data-theme="c" data-track-theme="d">
+            <option value="11">Catalan</option>
+            <option value="99">Chinese</option>
+            <option value="3">Czech</option>
+            <option value="10">Danish</option>
+            <option value="7">Dutch</option>
+            <option value="100">English</option>
+            <option value="6">Finnish</option>
+            <option value="4">French</option>
+            <option value="2">German</option>
+            <option value="12">Hungarian</option>
+            <option value="1">Italian</option>
+            <option value="13">Norwegian</option>
+            <option value="8">Polish</option>
+            <option value="5">Portuguese</option>
+            <option value="0">Spanish</option>
+            <option value="9">Swedish</option>
+          </select>
+        </div>
+
+
+<p><b>Local Time Zone:</b></p>
+
+        <div data-role="fieldcontain">
+          <label for="TZ1Time">Time Zone</label>
+          <select name="LocalTime"  id="LocalTime" data-theme="c" data-track-theme="d">
+            <option value="-12" class="" >(GMT -12:00) Eniwetok, Kwajalein</option>
+          	<option value="-11" class="" >(GMT -11:00) Midway Island, Samoa</option>
+          	<option value="-10" class="" >(GMT -10:00) Hawaii</option>
+          	<option value="-9" class="" >(GMT -9:00) Alaska</option>
+          	<option value="-8" class="" >(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+          	<option value="-7" class="" >(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+          	<option value="-6" class="" >(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+          	<option value="-5" class="" selected="selected">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+          	<option value="-4.5" class="" >(GMT -4:30) Caracas</option>
+          	<option value="-4" class="" >(GMT -4:00) Atlantic Time (Canada), La Paz, Santiago</option>
+          	<option value="-3.5" class="" >(GMT -3:30) Newfoundland</option>
+          	<option value="-3" class="" >(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+          	<option value="-2" class="" >(GMT -2:00) Mid-Atlantic</option>
+          	<option value="-1" class="" >(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+          	<option value="0" class="" >(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+          	<option value="1" class="" >(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+          	<option value="2" class="" >(GMT +2:00) South Africa, Cairo</option>
+          	<option value="3" class="" >(GMT +3:00) Baghdad, Riyadh, Kaliningrad</option>
+          	<option value="3.5" class="" >(GMT +3:30) Tehran</option>
+          	<option value="4" class="" >(GMT +4:00) Abu Dhabi, Muscat, Yerevan, Baku, Tbilisi, Moscow, St. Petersburg</option>
+          	<option value="4.5" class="" >(GMT +4:30) Kabul</option>
+          	<option value="5" class="" >(GMT +5:00) Islamabad, Karachi, Tashkent</option>
+          	<option value="5.5" class="" >(GMT +5:30) Mumbai, Kolkata, Chennai, New Delhi</option>
+          	<option value="5.75" class="" >(GMT +5:45) Kathmandu</option>
+          	<option value="6" class="" >(GMT +6:00) Almaty, Dhaka, Colombo, Ekaterinburg</option>
+          	<option value="6.5" class="" >(GMT +6:30) Yangon, Cocos Islands</option>
+          	<option value="7" class="" >(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+          	<option value="8" class="" >(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+          	<option value="9" class="" >(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo</option>
+          	<option value="9.5" class="" >(GMT +9:30) Adelaide, Darwin</option>
+          	<option value="10" class="" >(GMT +10:00) Eastern Australia, Guam, Yakutsk</option>
+          	<option value="11" class="" >(GMT +11:00) Magadan, Solomon Islands, New Caledonia, Vladivostok</option>
+          	<option value="12" class="" >(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+          </select>
+        </div>
+
+<p><b>Time Zone 1:</b></p>
+
+        <div data-role="fieldcontain">
+          <label for="TZ1Name">Name</label>
+          <input type="text" name="TZ1Name" id="TZ1Name" value="" />
+          <label for="TZ1Time">Time Zone</label>
+          <select name="TZ1Time"  id="TZ1Time" data-theme="c" data-track-theme="d">
+            <option value="-12" class="" >(GMT -12:00) Eniwetok, Kwajalein</option>
+          	<option value="-11" class="" >(GMT -11:00) Midway Island, Samoa</option>
+          	<option value="-10" class="" >(GMT -10:00) Hawaii</option>
+          	<option value="-9" class="" >(GMT -9:00) Alaska</option>
+          	<option value="-8" class="" >(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+          	<option value="-7" class="" >(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+          	<option value="-6" class="" >(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+          	<option value="-5" class="" selected="selected">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+          	<option value="-4.5" class="" >(GMT -4:30) Caracas</option>
+          	<option value="-4" class="" >(GMT -4:00) Atlantic Time (Canada), La Paz, Santiago</option>
+          	<option value="-3.5" class="" >(GMT -3:30) Newfoundland</option>
+          	<option value="-3" class="" >(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+          	<option value="-2" class="" >(GMT -2:00) Mid-Atlantic</option>
+          	<option value="-1" class="" >(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+          	<option value="0" class="" >(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+          	<option value="1" class="" >(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+          	<option value="2" class="" >(GMT +2:00) South Africa, Cairo</option>
+          	<option value="3" class="" >(GMT +3:00) Baghdad, Riyadh, Kaliningrad</option>
+          	<option value="3.5" class="" >(GMT +3:30) Tehran</option>
+          	<option value="4" class="" >(GMT +4:00) Abu Dhabi, Muscat, Yerevan, Baku, Tbilisi, Moscow, St. Petersburg</option>
+          	<option value="4.5" class="" >(GMT +4:30) Kabul</option>
+          	<option value="5" class="" >(GMT +5:00) Islamabad, Karachi, Tashkent</option>
+          	<option value="5.5" class="" >(GMT +5:30) Mumbai, Kolkata, Chennai, New Delhi</option>
+          	<option value="5.75" class="" >(GMT +5:45) Kathmandu</option>
+          	<option value="6" class="" >(GMT +6:00) Almaty, Dhaka, Colombo, Ekaterinburg</option>
+          	<option value="6.5" class="" >(GMT +6:30) Yangon, Cocos Islands</option>
+          	<option value="7" class="" >(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+          	<option value="8" class="" >(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+          	<option value="9" class="" >(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo</option>
+          	<option value="9.5" class="" >(GMT +9:30) Adelaide, Darwin</option>
+          	<option value="10" class="" >(GMT +10:00) Eastern Australia, Guam, Yakutsk</option>
+          	<option value="11" class="" >(GMT +11:00) Magadan, Solomon Islands, New Caledonia, Vladivostok</option>
+          	<option value="12" class="" >(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+          </select>
+        </div>
+
+<p><b>Time Zone 2:</b></p>
+        <div data-role="fieldcontain">
+          <label for="TZ2Name">Name</label>
+          <input type="text" name="TZ2Name" id="TZ2Name" value="" />
+          <label for="TZ2Time">Time Zone</label>
+          <select name="TZ2Time"  id="TZ2Time" data-theme="c" data-track-theme="d">
+            <option value="-12" class="" >(GMT -12:00) Eniwetok, Kwajalein</option>
+          	<option value="-11" class="" >(GMT -11:00) Midway Island, Samoa</option>
+          	<option value="-10" class="" >(GMT -10:00) Hawaii</option>
+          	<option value="-9" class="" >(GMT -9:00) Alaska</option>
+          	<option value="-8" class="" >(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+          	<option value="-7" class="" >(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+          	<option value="-6" class="" >(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+          	<option value="-5" class="" selected="selected">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+          	<option value="-4.5" class="" >(GMT -4:30) Caracas</option>
+          	<option value="-4" class="" >(GMT -4:00) Atlantic Time (Canada), La Paz, Santiago</option>
+          	<option value="-3.5" class="" >(GMT -3:30) Newfoundland</option>
+          	<option value="-3" class="" >(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+          	<option value="-2" class="" >(GMT -2:00) Mid-Atlantic</option>
+          	<option value="-1" class="" >(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+          	<option value="0" class="" >(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+          	<option value="1" class="" >(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+          	<option value="2" class="" >(GMT +2:00) South Africa, Cairo</option>
+          	<option value="3" class="" >(GMT +3:00) Baghdad, Riyadh, Kaliningrad</option>
+          	<option value="3.5" class="" >(GMT +3:30) Tehran</option>
+          	<option value="4" class="" >(GMT +4:00) Abu Dhabi, Muscat, Yerevan, Baku, Tbilisi, Moscow, St. Petersburg</option>
+          	<option value="4.5" class="" >(GMT +4:30) Kabul</option>
+          	<option value="5" class="" >(GMT +5:00) Islamabad, Karachi, Tashkent</option>
+          	<option value="5.5" class="" >(GMT +5:30) Mumbai, Kolkata, Chennai, New Delhi</option>
+          	<option value="5.75" class="" >(GMT +5:45) Kathmandu</option>
+          	<option value="6" class="" >(GMT +6:00) Almaty, Dhaka, Colombo, Ekaterinburg</option>
+          	<option value="6.5" class="" >(GMT +6:30) Yangon, Cocos Islands</option>
+          	<option value="7" class="" >(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+          	<option value="8" class="" >(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+          	<option value="9" class="" >(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo</option>
+          	<option value="9.5" class="" >(GMT +9:30) Adelaide, Darwin</option>
+          	<option value="10" class="" >(GMT +10:00) Eastern Australia, Guam, Yakutsk</option>
+          	<option value="11" class="" >(GMT +11:00) Magadan, Solomon Islands, New Caledonia, Vladivostok</option>
+          	<option value="12" class="" >(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+          </select>
+        </div>
+
+<p><b>Time Zone 3:</b></p>
+        <div data-role="fieldcontain">
+          <label for="TZ3Name">Name</label>
+          <input type="text" name="TZ3Name" id="TZ3Name" value="" />
+        <label for="TZ3Time">Time Zone</label>
+          <select name="TZ3Time"  id="TZ3Time" data-theme="c" data-track-theme="d">
+            <option value="-12" class="" >(GMT -12:00) Eniwetok, Kwajalein</option>
+          	<option value="-11" class="" >(GMT -11:00) Midway Island, Samoa</option>
+          	<option value="-10" class="" >(GMT -10:00) Hawaii</option>
+          	<option value="-9" class="" >(GMT -9:00) Alaska</option>
+          	<option value="-8" class="" >(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+          	<option value="-7" class="" >(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+          	<option value="-6" class="" >(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+          	<option value="-5" class="" selected="selected">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+          	<option value="-4.5" class="" >(GMT -4:30) Caracas</option>
+          	<option value="-4" class="" >(GMT -4:00) Atlantic Time (Canada), La Paz, Santiago</option>
+          	<option value="-3.5" class="" >(GMT -3:30) Newfoundland</option>
+          	<option value="-3" class="" >(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+          	<option value="-2" class="" >(GMT -2:00) Mid-Atlantic</option>
+          	<option value="-1" class="" >(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+          	<option value="0" class="" >(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+          	<option value="1" class="" >(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+          	<option value="2" class="" >(GMT +2:00) South Africa, Cairo</option>
+          	<option value="3" class="" >(GMT +3:00) Baghdad, Riyadh, Kaliningrad</option>
+          	<option value="3.5" class="" >(GMT +3:30) Tehran</option>
+          	<option value="4" class="" >(GMT +4:00) Abu Dhabi, Muscat, Yerevan, Baku, Tbilisi, Moscow, St. Petersburg</option>
+          	<option value="4.5" class="" >(GMT +4:30) Kabul</option>
+          	<option value="5" class="" >(GMT +5:00) Islamabad, Karachi, Tashkent</option>
+          	<option value="5.5" class="" >(GMT +5:30) Mumbai, Kolkata, Chennai, New Delhi</option>
+          	<option value="5.75" class="" >(GMT +5:45) Kathmandu</option>
+          	<option value="6" class="" >(GMT +6:00) Almaty, Dhaka, Colombo, Ekaterinburg</option>
+          	<option value="6.5" class="" >(GMT +6:30) Yangon, Cocos Islands</option>
+          	<option value="7" class="" >(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+          	<option value="8" class="" >(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+          	<option value="9" class="" >(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo</option>
+          	<option value="9.5" class="" >(GMT +9:30) Adelaide, Darwin</option>
+          	<option value="10" class="" >(GMT +10:00) Eastern Australia, Guam, Yakutsk</option>
+          	<option value="11" class="" >(GMT +11:00) Magadan, Solomon Islands, New Caledonia, Vladivostok</option>
+          	<option value="12" class="" >(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+          </select>
+        </div>
+
+
+        <div data-role="fieldcontain">
+          <label for="invert_color">Invert Colors</label>
+          <select name="invert_color" id="invert_color" data-theme="c" data-role="slider" data-track-theme="d">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+
+        <div class='ui-body ui-body-b'>
+          <fieldset class='ui-grid-a'>
+            <div class='ui-block-a'><button type='submit' data-theme='d' id='b-cancel'>Cancel</button></div>
+            <div class='ui-block-b'><button type='submit' data-theme='b' id='b-submit'>Submit</button></div>
+          </fieldset>
+        </div>
+
+      </div>
+    </div>
+    <script>
+      function getQueryVariable(variable) {
+        var query = location.search.substring(1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+          var pair = vars[i].split('=');
+          if (pair[0] == variable)
+            return decodeURIComponent(pair[1]);
+        }
+        return false;
+      }
+
+      function saveOptions() {
+       var options = {
+          'language': $('#language').val(),
+          'LocalTime': $('#LocalTime').val(),
+          'TZ1Name': $('#TZ1Name').val(),
+          'TZ1Time': $('#TZ1Time').val(),
+          'TZ2Name': $('#TZ2Name').val(),
+          'TZ2Time': $('#TZ2Time').val(),
+          'TZ3Name': $('#TZ3Name').val(),
+          'TZ3Time': $('#TZ3Time').val(),
+          'invert_color': $('#invert_color').val()
+        }
+        return options;
+      }
+
+      $().ready(function() {
+        $('#b-cancel').click(function() {
+          document.location = 'pebblejs://close#';
+        });
+        $('#b-submit').click(function() {
+          document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(saveOptions()));
+        });
+        
+        $('#language').val(getQueryVariable('language')).change();
+        $('#LocalTime').val(getQueryVariable('LocalTime'));
+        $('#TZ1Name').val(getQueryVariable('TZ1Name'));
+        $('#TZ1Time').val(getQueryVariable('TZ1Time'));
+        $('#TZ2Name').val(getQueryVariable('TZ2Name'));
+        $('#TZ2Time').val(getQueryVariable('TZ2Time'));
+        $('#TZ3Name').val(getQueryVariable('TZ3Name'));
+        $('#TZ3Time').val(getQueryVariable('TZ3Time'));
+        $('#invert_color').val(getQueryVariable('invert_color')).change();
+
+       
+      });
+    </script>
+  </body>
+</html>
