@@ -173,6 +173,307 @@ static const uint32_t TimeZones[] = {
 	12,// (GMT +12:00) Auckland, Wellington, Fiji, Kamchatka
 };
 
+static const char *WEEKDAYS[] = {
+	NULL,
+	//SPANISH - 0
+	"Lunes",
+	"Martes",
+	"Miércoles",
+	"Jueves",
+	"Viernes",
+	"Sábado", 
+	"Domingo", 
+	//ITALIAN - 1
+	"Lunedi",
+	"Martedi",
+	"Mercoledi", 
+	"Giovedi", 
+	"Venerdi", 
+	"Sabato", 
+	"Domenica", 
+	//GERMAN - 2
+	"Montag", 
+	"Dienstag", 
+	"Mittwoch", 
+	"Donnerstag", 
+	"Freitag", 
+	"Samstag", 
+	"Neděle",
+	//CZECH - 3
+	"Pondělí",
+	"Úterý", 
+	"Streda", 
+	"Čtvrtek", 
+	"Pátek", 
+	"Sobota", 
+	"Neděle", 
+	//FRENCH - 4
+	"Lundi",
+	"Mardi", 
+	"Mercredi",
+	"Jeudi", 
+	"Vendredi", 
+	"Samedi", 
+	"Dimanche", 
+	//PORTUGUESE - 5
+	"Segunda", 
+	"Terça", 
+	"Quarta",
+	"Quinta", 
+	"Sexta", 
+	"Sábado", 
+	"Domingo", 
+	//FINNISH - 6
+	"Maanantai", 
+	"Tiistai", 
+	"Keskiviikko",
+	"Torstai", 
+	"Perjantai",
+	"Lauantai",
+	"Sunnuntai", 
+	//DUTCH - 7
+	"Maandag", 
+	"Dinsdag", 
+	"Woensdag", 
+	"Donderdag",
+	"Vrijdag", 
+	"Zaterdag", 
+	"Zondag", 
+	//POLISH - 8
+	"Poniedzialek",
+	"Wtorek", 
+	"Sroda", 
+	"Czwartek",
+	"Piątek", 
+	"Sobota",
+	"Niedziela",
+	//SWEDISH - 9
+	"Måndag",
+	"Tisdag", 
+	"Onsdag", 
+	"Torsdag", 
+	"Fredag", 
+	"Lördag",
+	"Söndag ",
+	//DANISH - 10
+	"Mandag",
+	"Tirsdag",
+	"Onsdag",
+	"Torsdag",
+	"Fredag", 
+	"Lørdag",
+	"Søndag ",
+	//CATALAN - 11
+	"Dilluns", 
+	"Dimarts",
+	"Dimecres", 
+	"Dijous", 
+	"Divendres",
+	"Dissabte",
+	"Diumenge ",
+	//HUNGARIAN - 12
+	"Hétfo",
+	"Kedd", 
+	"Szerda",
+	"Csütörtök",
+	"Péntek", 
+	"Szombat",
+	"Vasárnap", 
+	//NORWEGIAN - 13
+	"Mandag",
+	"Tirsdag",
+	"Onsdag",
+	"Torsdag",
+	"Fredag", 
+	"Lørdag",
+	"Søndag ",  
+};
+
+static const char *MONTHS[] = {
+	NULL,
+	 //SPANISH - 0
+	" enero",
+	" febrero",
+	" marzo",
+	" abril",
+	" mayo",
+	" junio",
+	" julio",
+	" agosto", 
+	" septiembre",
+	" octubre", 
+	" noviembre", 
+	" diciembre", 
+	//ITALIAN - 1
+	" gennaio", 
+	" febbraio",
+	" marzo",
+	" aprile",
+	" maggio",
+	" giugno",
+	" luglio",
+	" agosto",
+	" settembre",
+	" ottobre",
+	" novembre",
+	" dicembre",
+	//GERMAN - 2
+	".Januar",
+	".Februar",
+	".März",
+	".April",
+	".Mai", 
+	".Juni", 
+	".Juli", 
+	".August",
+	".September",
+	".Oktober",
+	".November",
+	".Dezember",
+	//CZECH - 3
+	"Leden ",
+	"Únor ",
+	"Brezen ",
+	"Duben ", 
+	"Květen ", 
+	"Červen ",
+	"Červenec ", 
+	"Srpen ",
+	"Zárí ",
+	"Ríjen ",
+	"Listopad ",
+	"Prosinec ",
+	//FRENCH - 4
+	" janvier",
+	" février", 
+	" mars", 
+	" avril", 
+	" mai", 
+	" juin", 
+	" juillet", 
+	" août", 
+	" septembre", 
+	" octobre",
+	" novembre", 
+	" décembre", 
+	//PORTUGUESE - 5
+	" Janeiro", 
+	" Fevereiro", 
+	" Março", 
+	" Abril",
+	" Maio",
+	" Junho",
+	" Julho",
+	" Agosto",
+	" Setembro",
+	" Outubro",
+	" Novembro",
+	" Dezembro",
+	//FINNISH - 6
+	". Tammikuu",
+	". Helmikuu", 
+	". Maaliskuu",
+	". Huhtikuu", 
+	". Toukokuu", 
+	". Kesäkuu", 
+	". Heinäkuu", 
+	". Elokuu", 
+	". Syyskuu", 
+	". Lokakuu", 
+	". Marraskuu", 
+	". Joulukuu", 
+	//DUTCH - 7
+	" Januari", 
+	" Februari",
+	" Maart",
+	" April",
+	" Mei", 
+	" Juni", 
+	" Juli", 
+	" Augustus", 
+	" September", 
+	" Oktober", 
+	" November",
+	" December", 
+	//POLISH - 8
+	" stycznia",
+	" lutego", 
+	" marca", 
+	" kwietnia", 
+	" maja", 
+	" czerwca",
+	" lipca", 
+	" sierpnia",
+	" wrzesnia",
+	" pazdziernika",
+	" listopada", 
+	" grudnia", 
+	//SWEDISH - 9
+	" Januari", 
+	" Februari",
+	" Mars", 
+	" April", 
+	" Maj", 
+	" Juni",
+	" Juli", 
+	" Augusti",
+	" September", 
+	" Oktober",
+	" November", 
+	" December", 
+	//DANISH - 10
+	". Januar",
+	". Februar", 
+	". Marts", 
+	". April", 
+	". Maj", 
+	". Juni", 
+	". Juli",
+	". August",
+	". September", 
+	". Oktober", 
+	". November",
+	". December",
+	//CATALAN - 11
+	" Gener", 
+	" Febrer", 
+	" Març", 
+	" Abril", 
+	" Maig", 
+	" Juny",
+	" Juliol", 
+	" Agost", 
+	" Setembre", 
+	" Octubre", 
+	" Novembre", 
+	" Desembre", 
+	//HUNGARIAN - 12
+	"január ", 
+	"február ", 
+	"március ",
+	"április ", 
+	"május ", 
+	"június ", 
+	"július ", 
+	"augusztus ", 
+	"szeptember ", 
+	"október ",
+	"november ", 
+	"december ", 
+	//NORWEGIAN - 13
+	". januar", 
+	". februar", 
+	". mars", 
+	". april", 
+	". mai", 
+	". juni", 
+	". juli", 
+	". august", 
+	". september", 
+	". oktober", 
+	". november", 
+	". desember", 
+};
 
 //**************************//
 // Check the Battery Status //
@@ -290,154 +591,85 @@ void InvertColors(bool inverted)
 }// END - Inver colors
 
 
-
-
-void TranslateDate(){
-
-			if (month_text[0] == 'J' && month_text[1] == 'a')
-			{
-				memcpy(&month_text, "   enero", strlen("   enero")+1); // January
-			}
-
-			if (month_text[0] == 'F' && month_text[1] == 'e')
-			{
-				memcpy(&month_text, "   febrero", strlen("   febrero")+1); // Febrary
-			}
-
-			if (month_text[0] == 'M' && month_text[2] == 'r')
-			{
-				memcpy(&month_text, "   marzo", strlen("   marzo")+1); // March
-			}
-
-			if (month_text[0] == 'A' && month_text[1] == 'p')
-			{
-				memcpy(&month_text, "   abril", strlen("   abril")+1); // April
-			}
-
-			if (month_text[0] == 'M' && month_text[2] == 'y')
-			{
-				memcpy(&month_text, "   de mayo", strlen("   de mayo")+1); // May
-			}
-
-			if (month_text[0] == 'J' && month_text[2] == 'n')
-			{
-				memcpy(&month_text, "   junio", strlen("   junio")+1); // June
-			}
-
-			if (month_text[0] == 'J' && month_text[2] == 'l')
-			{
-				memcpy(&month_text, "   julio", strlen("   julio")+1); // July
-			}
-
-			if (month_text[0] == 'A' && month_text[1] == 'u')
-			{
-				memcpy(&month_text, "   agosto ", strlen("   agosto ")+1); // August
-			}
-
-			if (month_text[0] == 'S' && month_text[1] == 'e')
-			{
-				memcpy(&month_text, "   septiembre", strlen("   septiembre")+1); // September
-			}
-
-			if (month_text[0] == 'O' && month_text[1] == 'c')
-			{
-				memcpy(&month_text, "   octubre", strlen("   octubre")+1); // October
-			}
-
-			if (month_text[0] == 'N' && month_text[1] == 'o')
-			{
-				memcpy(&month_text, "   noviembre", strlen("   noviembre")+1); // November
-			}
-
-			if (month_text[0] == 'D' && month_text[1] == 'e')
-			{
-				memcpy(&month_text, "   diciembre", strlen("   diciembre")+1); // December
-			}
-
-			// Primitive hack to translate the day of week to another language
-			// Needs to be exactly 3 characters, e.g. "Mon" or "Mo "
-			// Supported characters: A-Z, a-z, 0-9
-
-			if (weekday_text[0] == 'M')
-			{
-				memcpy(&weekday_text, " Lunes", strlen(" Lunes")+1); // Monday
-			}
-
-			if (weekday_text[0] == 'T' && weekday_text[1] == 'u')
-			{
-				memcpy(&weekday_text, " Martes", strlen(" Martes")+1); // Tuesday
-			}
-
-			if (weekday_text[0] == 'W')
-			{
-				memcpy(&weekday_text, " Miercoles", strlen(" Miercoles")+1); // Wednesday
-			}
-
-			if (weekday_text[0] == 'T' && weekday_text[1] == 'h')
-			{
-				memcpy(&weekday_text, " Jueves", strlen(" Jueves")+1); // Thursday
-			}
-
-			if (weekday_text[0] == 'F')
-			{
-				memcpy(&weekday_text, " Viernes", strlen(" Viernes")+1); // Friday
-			}
-
-			if (weekday_text[0] == 'S' && weekday_text[1] == 'a')
-			{
-				memcpy(&weekday_text, " Sabado", strlen(" Sabado")+1); // Saturday
-			}
-
-			if (weekday_text[0] == 'S' && weekday_text[1] == 'u')
-			{
-				memcpy(&weekday_text, " Domingo", strlen(" Domingo")+1); // Sunday
-			}
-
-
-}
-
 //**************************//
 //** Get the current date **//
 //**************************//
 void getDate()
 {
-	
 	//Get the date
 	time_t actualPtr = time(NULL);
 	struct tm *tz1Ptr = gmtime(&actualPtr);
 	
-	//Get the Weekday
-	strftime(weekday_text,sizeof(weekday_text),"%A",tz1Ptr);
-	//Get the Month + Day (English format)
-	strftime(month_text,sizeof(month_text),"%B %e",tz1Ptr);
-	//Get the Day + Month (Spanish format)
-	strftime(day_month,sizeof(day_month),"%e %B",tz1Ptr);
 	
-	
-	if(language[0] != '0'){
-		//Get the Month
-		strftime(month_text,sizeof(month_text),"%B",tz1Ptr);
-		//Get the day
-		strftime(day_text,sizeof(day_text),"%e",tz1Ptr);
-		//Translate to Spanish
-		TranslateDate();
+	//Try new translation method
 		
-		if(translate_sp){ 
-		//Concatenate the day to the month
-		//If Czech the month is before day
-		if (language[0] == 'C'){strncat(month_text,day_text,strlen(day_text));}
-		else {memcpy(&month_text, day_text, strlen(day_text));}    
-		}
-		else{
-		//Keep the Month + Day (English format)
+		//Get the number of the weekday
+		strftime(weekday_text,sizeof(weekday_text),"%u",tz1Ptr);
+		int ia = weekday_text[0] - '0'; 
+		int ib = (intLanguage*7)+ia;
+	
+		//Get the number of the month	
+		strftime(month_text,sizeof(month_text),"%m",tz1Ptr);
+		int ic = month_text[1] - '0';
+		if (month_text[0]=='1'){ic=ic+10;}			
+		int id = (intLanguage*12)+ic;
+	
+	if(intLanguage==100){ //ENGLISH
+		
+		//remove the chinese week day
+		//if (chinese_day) {gbitmap_destroy(chinese_day);}
+		//bitmap_layer_set_bitmap(chinese_day_layer, NULL);
+		
+		//Get the English fortmat
 		strftime(month_text,sizeof(month_text),"%B %e",tz1Ptr);
-		}
+		strftime(weekday_text,sizeof(weekday_text),"%A",tz1Ptr);
+		
+		text_layer_set_text(Weekday_Layer,weekday_text); //Update the weekday layer  
+		text_layer_set_text(date_layer,month_text); 
+		
 	}
-	
-	
-	text_layer_set_text(date_layer, month_text);
-	text_layer_set_text(Weekday_Layer, weekday_text); //Update the weekday layer    
-	
+	/*
+	else if (language==99){//CHINESE
+		
+		//Work on retrieving the correct weekday
+		//Get the Month
+		strftime(month_text,sizeof(month_text),"%m/%d",tz1Ptr);
+		
+		//Clean un the text layer
+		text_layer_set_text(Weekday_Layer,"");
+		
+		if (chinese_day) {gbitmap_destroy(chinese_day);}
+		chinese_day = gbitmap_create_with_resource(CHINESE_DAYS[ia-1]);
+		//Display the weekday in chinese
+		bitmap_layer_set_bitmap(chinese_day_layer, chinese_day);
+		text_layer_set_text(date_layer, month_text);
+		
+	}
+	*/
+
+	else{
+		//remove the chinese week day
+		//if (chinese_day) {gbitmap_destroy(chinese_day);}
+		//bitmap_layer_set_bitmap(chinese_day_layer, NULL);
+
+		//Set the weekeday
+		text_layer_set_text(Weekday_Layer, WEEKDAYS[ib]); //Update the weekday layer  
+		
+		
+		//Get the day
+		strftime(day_month,sizeof(day_month),"%e",tz1Ptr);
+		
+		//Set the month
+		//text_layer_set_text(date_layer, MONTHS[id]);
+				 if ((intLanguage == 12)||(intLanguage == 3)){
+					memcpy(&month_text, MONTHS[id], strlen(MONTHS[id])+1);
+					text_layer_set_text(date_layer,strncat(month_text,day_month,strlen(month_text)));} //Czech or Hungarian
+				else{text_layer_set_text(date_layer,strncat(day_month,MONTHS[id],strlen(MONTHS[id]))); }
+		
+	}
+
+
+
 }
 
 void getTimeZones(){
@@ -568,15 +800,15 @@ void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
 	//Get Number of hours
 	if (TimeZone == 1){
 			tz1_hours= TimeZones[GMT] - local_hours;
-			tz1_min=0 + TZ_min;
+			tz1_min=(0 + TZ_min) - local_min;
 	}
 	else if (TimeZone == 2){
 			tz2_hours= TimeZones[GMT] - local_hours;
-			tz2_min=0 + TZ_min;
+			tz2_min=(0 + TZ_min)- local_min;
 	}
 	else if (TimeZone == 3){
 			tz3_hours= TimeZones[GMT] - local_hours;
-			tz3_min=0 + TZ_min;
+			tz3_min=(0 + TZ_min) - local_min;
 	}
 	
 
@@ -602,11 +834,19 @@ void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
       case Language_KEY:
 	  	intLanguage = new_tuple->value->int8;  
 	  	persist_write_int(Language_KEY, intLanguage);
+	  
+	  	//Init the date
+		getDate();
       	break;
 	  
 	  case LocalTime_KEY:
 	  	intLocalTime = new_tuple->value->int8;  
 	  	persist_write_int(LocalTime_KEY, intLocalTime);
+	  
+	  	CalculateTimeZone (intLocalTime,1,intTZ1);
+	  	CalculateTimeZone (intLocalTime,2,intTZ2);
+	  	CalculateTimeZone (intLocalTime,3,intTZ3);
+	  	getTimeZones();
       	break;
 	  
     case TZ1Name_KEY:
@@ -666,36 +906,6 @@ void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
 //************************//
 void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 {
-
-	//time_t lnow = time(NULL);
-	struct tm local_time;
-
-//Init the date
-
-				//Get the Weekday
-				strftime(weekday_text,sizeof(weekday_text),"%A",tick_time);
-				//Get the Month + Day (English format)
-				 strftime(month_text,sizeof(month_text),"%B %e",tick_time);
-				//Get the Day + Month (Spanish format)
-				strftime(day_month,sizeof(day_month),"%e %B",tick_time);
-
-
-				if(translate_sp){
-					//Get the Month
-					strftime(month_text,sizeof(month_text),"%B",tick_time);
-					//Get the day
-					strftime(day_text,sizeof(day_text),"%e",tick_time);
-					//Translate to Spanish
-					TranslateDate();
-
-					//Concatenate the day to the month
-					memcpy(&month_text, day_text, strlen(day_text));
-				}
-
-
-				text_layer_set_text(date_layer, month_text);
-				text_layer_set_text(Weekday_Layer, weekday_text); //Update the weekday layer	
-
 
 	if (units_changed & MINUTE_UNIT) 
 	{

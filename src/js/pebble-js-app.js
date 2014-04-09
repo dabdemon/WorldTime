@@ -17,7 +17,7 @@ if (options === null) options = { "language":100,
 function ReturnTimeZones() {
 
           Pebble.sendAppMessage({
-			"language" : options['language'],
+			"language" : parseInt(options['language']),
 			"LocalTime" : parseInt(options['LocalTime']),
 			"TZ1Name" : options['TZ1Name'],
 			"TZ1Time" : parseInt(options['TZ1Time']),
