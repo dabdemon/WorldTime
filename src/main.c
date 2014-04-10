@@ -17,6 +17,7 @@ PBL_APP_INFO(MY_UUID,
              RESOURCE_ID_IMAGE_MENU_ICON,
              APP_INFO_WATCH_FACE);
 */		 
+#define MyTupletCString(_key, _cstring) ((const Tuplet) { .type = TUPLE_CSTRING, .key = _key, .cstring = { .data = _cstring, .length = strlen(_cstring) + 1 }})
 
 #define WEEKDAY_FRAME	  (GRect(5,  2, 95, 168-145)) 
 #define BATT_FRAME 	      (GRect(100,  4, 40, 168-146)) 
@@ -90,9 +91,9 @@ static int LAYER_ICONS[] = {
 	static char last_update[]="00:00 ";
 	static int initial_minute;
 
-	static char weekday_text[] = "XXXXXXXXXX";
+	static char weekday_text[] = "          ";
 	static char date_text[] = "XXX 00";
-	static char month_text[] = "XXXXXXXXXXXXX";
+	static char month_text[] = "             ";
 	static char day_text[] = "31";
 	static char day_month[]= "31 SEPTEMBER"; 
 	static char time_text[] = "00:00"; 
@@ -103,15 +104,15 @@ static int LAYER_ICONS[] = {
 	int local_min=0;
 	int TZ_min=0;
 
-	static char tz1_name[]="XXXXXXXXXXXXX";
+	static char tz1_name[]="             ";
 	int intTZ1  = 0;
 	int tz1_hours= 0;
 	int tz1_min=0;
-	static char tz2_name[]="XXXXXXXXXXXXX";
+	static char tz2_name[]="             ";
 	int intTZ2  = 0;
 	int tz2_hours= 0;
 	int tz2_min=0;
-	static char tz3_name[]="XXXXXXXXXXXXX";
+	static char tz3_name[]="             ";
 	int intTZ3  = 0;
 	int tz3_hours= 0;
 	int tz3_min=0;
@@ -124,6 +125,10 @@ static int LAYER_ICONS[] = {
 	static char language[] = "E";
 	int intLanguage = 100;
 	bool color_inverted = false;
+	bool blninverted =  false;
+
+	InverterLayer *inv_layer;
+
 
 enum TimeZoneKey {
   Language_KEY = 0x0,        // TUPLE_INT
@@ -488,8 +493,7 @@ static void handle_battery(BatteryChargeState charge_state) {
 
   if (charge_state.is_charging) {
     //snprintf(battery_text, sizeof(battery_text), "charging");
-			  if (color_inverted){Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_CHARw);}
-			  else {Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_CHAR);} 
+			  Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_CHAR); 
               bitmap_layer_set_bitmap(Batt_icon_layer, Batt_image);
   } else {
 	  //snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
@@ -500,8 +504,7 @@ static void handle_battery(BatteryChargeState charge_state) {
          //DO NOT display the batt_icon all the time. it is annoying.
          if (charge_state.charge_percent <=10) //If the charge is between 0% and 10%
          {
-			 if (color_inverted){Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_EMPTYw);}
-			 else{Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_EMPTY);}
+			 Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_EMPTY);
              bitmap_layer_set_bitmap(Batt_icon_layer, Batt_image);
          }
 }
@@ -519,8 +522,7 @@ static void handle_bluetooth(bool connected)
 	if(connected ==true)
 	{
 		if (BT_image) {gbitmap_destroy(BT_image);}
-			if (color_inverted){BT_image = gbitmap_create_with_resource(RESOURCE_ID_BT_CONNECTEDw);}
-			else{BT_image = gbitmap_create_with_resource(RESOURCE_ID_BT_CONNECTED);}
+			BT_image = gbitmap_create_with_resource(RESOURCE_ID_BT_CONNECTED);
             bitmap_layer_set_bitmap(BT_icon_layer, BT_image);
 		if (BTConnected == false){
 			//Vibes to alert connection
@@ -549,42 +551,19 @@ static void handle_bluetooth(bool connected)
 void InvertColors(bool inverted)
 {
 	
-	if(inverted)
-	{
-		window_set_background_color(my_window, GColorWhite);
-		
-		text_layer_set_text_color(Weekday_Layer, GColorBlack);
-		text_layer_set_text_color(Time_Layer, GColorBlack);
-		text_layer_set_text_color(date_layer, GColorBlack);
-		
-		text_layer_set_text_color(WC1NAME_Layer, GColorBlack);
-		text_layer_set_text_color(WC2NAME_Layer, GColorBlack);
-		text_layer_set_text_color(WC3NAME_Layer, GColorBlack);
-		
-		text_layer_set_text_color(WC1TIME_Layer, GColorBlack);
-		text_layer_set_text_color(WC2TIME_Layer, GColorBlack);
-		text_layer_set_text_color(WC3TIME_Layer, GColorBlack);
-		
-
+	if (inverted){
+		//Inverter layer
+		if (blninverted == false){		
+			inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
+			layer_add_child(window_get_root_layer(my_window), (Layer*) inv_layer);
+			blninverted =  true;
+	    }
 	}
-	else
-	{
-		window_set_background_color(my_window, GColorBlack);
-		
-		text_layer_set_text_color(Weekday_Layer, GColorWhite);
-		text_layer_set_text_color(Time_Layer, GColorWhite);
-		text_layer_set_text_color(date_layer, GColorWhite);
-		
-		text_layer_set_text_color(WC1NAME_Layer, GColorWhite);
-		text_layer_set_text_color(WC2NAME_Layer, GColorWhite);
-		text_layer_set_text_color(WC3NAME_Layer, GColorWhite);
-		
-		text_layer_set_text_color(WC1TIME_Layer, GColorWhite);
-		text_layer_set_text_color(WC2TIME_Layer, GColorWhite);
-		text_layer_set_text_color(WC3TIME_Layer, GColorWhite);
-
-		
-		
+	
+	else{
+		if(blninverted){
+			inverter_layer_destroy(inv_layer);
+			blninverted = false;}
 	}
 
 	
@@ -981,43 +960,17 @@ void handle_init(void)
 	ResHandle res_t;
 	ResHandle res_temp;
 	
-
 	
-		         // Setup messaging
-                const int inbound_size = 128;
-                const int outbound_size = 128;
-	
-                app_message_open(inbound_size, outbound_size);
-	                
-    
-				Tuplet initial_values[] = {
-				TupletInteger(Language_KEY, (int8_t) 100), //Default to english
-				TupletInteger(LocalTime_KEY, (int8_t) 15), //Default to Madrid
-                TupletCString(TZ1Name_KEY, ""),
-                TupletInteger(TZ1Time_KEY, (int8_t) 0),
-				TupletCString(TZ2Name_KEY, ""),
-                TupletInteger(TZ2Time_KEY, (int8_t) 0),
-				TupletCString(TZ3Name_KEY, ""),
-                TupletInteger(TZ3Time_KEY, (int8_t) 0),
-				TupletInteger(INVERT_COLOR_KEY, persist_read_bool(INVERT_COLOR_KEY)),
-                }; //TUPLET INITIAL VALUES
-	
-
-       
-                app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values,
-                ARRAY_LENGTH(initial_values), sync_tuple_changed_callback,
-                NULL, NULL);
-	
-			// read saved settings
-			intLanguage=persist_read_int(Language_KEY);
-			intLocalTime=persist_read_int(LocalTime_KEY);
-			persist_read_string(TZ1Name_KEY, tz1_name, sizeof(tz1_name));
-			intTZ1=persist_read_int(TZ1Time_KEY);
-			persist_read_string(TZ2Name_KEY, tz2_name, sizeof(tz2_name));
-			intTZ2=persist_read_int(TZ2Time_KEY);
-			persist_read_string(TZ3Name_KEY, tz3_name, sizeof(tz3_name));
-			intTZ3=persist_read_int(TZ3Time_KEY);
-			color_inverted = persist_read_bool(INVERT_COLOR_KEY);
+	// read saved settings
+	intLanguage=persist_read_int(Language_KEY);
+	intLocalTime=persist_read_int(LocalTime_KEY);
+	persist_read_string(TZ1Name_KEY, tz1_name, sizeof(tz1_name));
+	intTZ1=persist_read_int(TZ1Time_KEY);
+	persist_read_string(TZ2Name_KEY, tz2_name, sizeof(tz2_name));
+	intTZ2=persist_read_int(TZ2Time_KEY);
+	persist_read_string(TZ3Name_KEY, tz3_name, sizeof(tz3_name));
+	intTZ3=persist_read_int(TZ3Time_KEY);
+	color_inverted = persist_read_bool(INVERT_COLOR_KEY);
 
 	//Create the main window
 	my_window = window_create(); 
@@ -1115,6 +1068,9 @@ void handle_init(void)
 		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(WC3TIME_Layer)); 
 
 
+		//Drawn the normal/inverted based on saved settings
+	    InvertColors(color_inverted);
+
 	// Ensures time is displayed immediately (will break if NULL tick event accessed).
 	  // (This is why it's a good idea to have a separate routine to do the update itself.)
 
@@ -1127,6 +1083,31 @@ void handle_init(void)
 		battery_state_service_subscribe(&handle_battery);
 		//Enable the Bluetooth check event
 	 	bluetooth_connection_service_subscribe(&handle_bluetooth);
+	
+	// Setup messaging
+		const int inbound_size = 128;
+		const int outbound_size = 128;
+		
+		app_message_open(inbound_size, outbound_size);
+	
+	
+	Tuplet initial_values[] = {
+		TupletInteger(Language_KEY, intLanguage), 
+		TupletInteger(LocalTime_KEY, intLocalTime), 
+		MyTupletCString(TZ1Name_KEY,tz1_name),
+		TupletInteger(TZ1Time_KEY, intTZ1),
+		MyTupletCString(TZ2Name_KEY,tz2_name),
+		TupletInteger(TZ2Time_KEY, intTZ2),
+		MyTupletCString(TZ3Name_KEY,tz3_name),
+		TupletInteger(TZ3Time_KEY, intTZ3),
+		TupletInteger(INVERT_COLOR_KEY, color_inverted),
+	}; //TUPLET INITIAL VALUES
+	
+	
+	
+	app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values,
+				  ARRAY_LENGTH(initial_values), sync_tuple_changed_callback,
+				  NULL, NULL);
 
 } //HANDLE_INIT
 

@@ -25,21 +25,6 @@
     "resources": {
         "media": [
             {
-                "type": "png",
-                "name": "BATT_CHARw",
-                "file": "images/batt_charw_2.png"
-            },
-            {
-                "type": "png",
-                "name": "BATT_EMPTYw",
-                "file": "images/batt_emptyw.png"
-            },
-            {
-                "type": "png",
-                "name": "BT_CONNECTEDw",
-                "file": "images/bluetooth_white_smallw.png"
-            },
-            {
                 "characterRegex": "[0-9:]",
                 "type": "font",
                 "name": "FUTURA_CONDENSED_53",
