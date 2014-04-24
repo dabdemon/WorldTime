@@ -1,65 +1,60 @@
 {
-    "versionLabel": "1.1",
-    "uuid": "4e2ae2a7-ad7e-4955-a228-13ec4179dd35",
-    "appKeys": {
-        "language": 0,
-        "TZ2Name": 4,
-        "TZ1Time": 3,
-        "invert_color": 8,
-        "TZ1Name": 2,
-        "TZ2Time": 5,
-        "TZ3Time": 7,
-        "LocalTime": 1,
-        "TZ3Name": 6
-    },
-    "longName": "World Time",
-    "versionCode": 1,
+    "versionLabel": "1.2",
     "capabilities": [
         "configurable"
     ],
     "shortName": "World Time",
-    "companyName": "dabdemon",
-    "watchapp": {
-        "watchface": true
-    },
+    "longName": "World Time",
+    "versionCode": 2,
+    "uuid": "4e2ae2a7-ad7e-4955-a228-13ec4179dd35",
     "resources": {
         "media": [
             {
+                "type": "png",
+                "file": "images/bluetooth_white_small2.png",
+                "name": "BT_CONNECTED"
+            },
+            {
+                "type": "png",
+                "file": "images/batt_char.png",
+                "name": "BATT_CHAR"
+            },
+            {
+                "type": "png",
+                "file": "images/batt_empty.png",
+                "name": "BATT_EMPTY"
+            },
+            {
+                "type": "font",
+                "file": "fonts/futura.ttf",
+                "name": "FUTURA_17"
+            },
+            {
+                "type": "font",
+                "file": "fonts/futura.ttf",
+                "name": "FUTURA_14"
+            },
+            {
+                "type": "font",
+                "file": "fonts/futura_condensed_bold-webfont.ttf",
                 "characterRegex": "[0-9:]",
-                "type": "font",
-                "name": "FUTURA_CONDENSED_53",
-                "file": "fonts/futura_condensed_bold-webfont.ttf"
-            },
-            {
-                "type": "font",
-                "name": "FUTURA_14",
-                "file": "fonts/futura.ttf"
-            },
-            {
-                "type": "font",
-                "name": "FUTURA_17",
-                "file": "fonts/futura.ttf"
-            },
-            {
-                "type": "png",
-                "name": "BATT_EMPTY",
-                "file": "images/batt_empty.png"
-            },
-            {
-                "type": "png",
-                "name": "BATT_CHAR",
-                "file": "images/batt_char.png"
-            },
-            {
-                "type": "png",
-                "name": "BT_DISCONNECTED",
-                "file": "images/bluetooth_Off_white_small.png"
-            },
-            {
-                "type": "png",
-                "name": "BT_CONNECTED",
-                "file": "images/bluetooth_white_small.png"
+                "name": "FUTURA_CONDENSED_53"
             }
         ]
-    }
+    },
+    "watchapp": {
+        "watchface": true
+    },
+    "appKeys": {
+        "invert_color": 8,
+        "TZ3Time": 7,
+        "TZ2Time": 5,
+        "language": 0,
+        "TZ2Name": 4,
+        "TZ3Name": 6,
+        "TZ1Time": 3,
+        "LocalTime": 1,
+        "TZ1Name": 2
+    },
+    "companyName": "dabdemon"
 }

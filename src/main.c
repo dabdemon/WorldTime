@@ -37,14 +37,6 @@ PBL_APP_INFO(MY_UUID,
 //#define WC4NAME_FRAME     (GRect(5,  140, 105, 168-145))
 //#define WC4TIME_FRAME     (GRect(100, 140, 41, 168-145))
 
-//******************//
-// DEFINE THE ICONS //
-//******************//	
-static int LAYER_ICONS[] = {
-	RESOURCE_ID_BT_CONNECTED,
-	RESOURCE_ID_BT_DISCONNECTED,
-};
-
 
 //Declare initial window	
 	Window *my_window;    
@@ -203,7 +195,7 @@ static const char *WEEKDAYS[] = {
 	"Donnerstag", 
 	"Freitag", 
 	"Samstag", 
-	"Neděle",
+	"Sonntag",
 	//CZECH - 3
 	"Pondělí",
 	"Úterý", 
@@ -830,6 +822,8 @@ void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
 	  
     case TZ1Name_KEY:
   		persist_write_string(TZ1Name_KEY, new_tuple->value->cstring);
+		  //clean up the string
+		  memset(&tz1_name[0], 0, sizeof(tz1_name));
 	  	memcpy(&tz1_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
 	  	text_layer_set_text(WC1NAME_Layer, tz1_name);
       	break;
@@ -844,6 +838,8 @@ void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
 	  
 	 case TZ2Name_KEY:
   		persist_write_string(TZ2Name_KEY, new_tuple->value->cstring);
+		  //clean up the string
+		  memset(&tz2_name[0], 0, sizeof(tz2_name));
 	  	memcpy(&tz2_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
 	  	text_layer_set_text(WC2NAME_Layer, tz2_name);
       	break;
@@ -858,6 +854,8 @@ void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
 	  
 	 case TZ3Name_KEY:
   		persist_write_string(TZ3Name_KEY, new_tuple->value->cstring);
+		  //clean up the string
+		  memset(&tz3_name[0], 0, sizeof(tz3_name));
 	  	memcpy(&tz3_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
 	  	text_layer_set_text(WC3NAME_Layer, tz3_name);
       	break;
@@ -909,27 +907,6 @@ void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 
   			text_layer_set_text(Time_Layer, time_text);
 
-
-			//WORLD CLOCK
-	/*
-			static char tz1_name[]="Gurgaon";
-			int tz1_hours= 4;
-			int tz1_min=30;
-			static char tz2_name[]="Buenos Aires";
-			int tz2_hours= -4;
-			int tz2_min=0;
-			static char tz3_name[]="Chicago";
-			int tz3_hours= -7;
-			int tz3_min=0;
-			static char tz4_name[]="San Francisco";
-			int tz4_hours= -9;
-			int tz4_min=0;
-
-			static char TZ1[] = "00:00";
-			static char TZ2[] = "00:00";
-			static char TZ3[] = "00:00";
-			static char TZ4[] = "00:00";
-*/
 
 			//Calculate the Dual Time
 			getTimeZones();
