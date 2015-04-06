@@ -66,6 +66,11 @@
                     </div>
                     
                     <div data-role="fieldcontain">
+                        <label for="dualpos3"><b>Remote Timezone 3:</b> Define your remote position.</label>
+                        <input type="text" name="dualpos3" id="dualpos3" value="" />
+                    </div>
+                    
+                    <div data-role="fieldcontain">
                         <fieldset data-role="controlgroup" data-type="horizontal">
                             <legend>Units:</legend>
                             <label for="celsius">Metric</label>
@@ -134,6 +139,7 @@
                         'localpos': $('#localpos').val(),
                         'dualpos': $('#dualpos').val(),
                         'dualpos2': $('#dualpos2').val(),
+                        'dualpos3': $('#dualpos3').val(),
                         'units': $('input:radio[name=units]:checked').val(),
                         'UUID': $('#UUID').val(),
                         'lt': $('#lt').val(),
@@ -172,6 +178,7 @@
                     $('#localpos').val(getQueryVariable('localpos'));
                     $('#dualpos').val(getQueryVariable('dualpos'));
                     $('#dualpos2').val(getQueryVariable('dualpos2'));
+                    $('#dualpos3').val(getQueryVariable('dualpos3'));
                     if (getQueryVariable('units') == "celsius") {
                         $('input:radio[name=units][value=celsius]').prop('checked', true).trigger("click");
                     } else {
