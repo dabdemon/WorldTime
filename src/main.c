@@ -1,881 +1,578 @@
-//Declare and Import references
-#include "pebble.h"
-#include "pebble_fonts.h"
+#include "main.h"
+#include <pebble.h>
+#include "PDUtils.h"
 
-
-/*
-//Watchface header section
-#define MY_UUID { 0xE9, 0x96, 0x5A, 0xC7, 0x5E, 0xA1, 0x49, 0xC1, 0xA6, 0xC3, 0x05, 0xAD, 0xA8, 0x4F, 0xBF, 0x2A }
-
-// Spanish: 4296c359-6177-4d96-b1a4-262bf90b7af9
-// English: 4e2ae2a7-ad7e-4955-a228-13ec4179dd35
-
-
-PBL_APP_INFO(MY_UUID,
-             "World Time", "dabdemon", 
-             1, 0, // App version
-             RESOURCE_ID_IMAGE_MENU_ICON,
-             APP_INFO_WATCH_FACE);
-*/		 
-#define MyTupletCString(_key, _cstring) ((const Tuplet) { .type = TUPLE_CSTRING, .key = _key, .cstring = { .data = _cstring, .length = strlen(_cstring) + 1 }})
-
-#define WEEKDAY_FRAME	  (GRect(5,  2, 95, 168-145)) 
-#define BATT_FRAME 	      (GRect(100,  4, 40, 168-146)) 
-#define BT_FRAME 	      (GRect(125,  4, 25, 168-146)) 
-#define TIME_FRAME        (GRect(0, 15, 144, 168-16)) 
-#define DATE_FRAME        (GRect(1, 69, 139, 168-62)) 
-
-#define WC1NAME_FRAME     (GRect(5,  102, 105, 168-145))//95
-#define WC1TIME_FRAME     (GRect(100, 102, 41, 168-145))
-	
-#define WC2NAME_FRAME     (GRect(5,  117, 105, 168-145))//110
-#define WC2TIME_FRAME     (GRect(100, 117, 41, 168-145))
-	
-#define WC3NAME_FRAME     (GRect(5,  132, 105, 168-145)) //125
-#define WC3TIME_FRAME     (GRect(100, 132, 41, 168-145))
-	
-//#define WC4NAME_FRAME     (GRect(5,  140, 105, 168-145))
-//#define WC4TIME_FRAME     (GRect(100, 140, 41, 168-145))
-
-
-//Declare initial window	
-	Window *my_window;    
-
-//Define the layers
-	TextLayer *date_layer;   		// Layer for the date
-	TextLayer *Time_Layer; 			// Layer for the time
-	TextLayer *Weekday_Layer; 		//Layer for the weekday
-	TextLayer *Last_Update; 		// Layer for the last update
-	TextLayer *Location_Layer; 		// Layer for the last update
-	TextLayer *Batt_Layer;			//Layer for the BT connection
-	TextLayer *BT_Layer;			//Layer for the BT connection
-	TextLayer *WC1NAME_Layer;	//Layer for the Temperature
-	TextLayer *WC1TIME_Layer;	//Layer for the Temperature
-	TextLayer *WC2NAME_Layer;	//Layer for the Temperature
-	TextLayer *WC2TIME_Layer;	//Layer for the Temperature
-	TextLayer *WC3NAME_Layer;	//Layer for the Temperature
-	TextLayer *WC3TIME_Layer;	//Layer for the Temperature
-//	TextLayer *WC4NAME_Layer;	//Layer for the Temperature
-//	TextLayer *WC4TIME_Layer;	//Layer for the Temperature
-
-/*
-	TextLayer *Max_Layer;			//Layer for the Max Temperature
-	TextLayer *Min_Layer;			//Layer for the Min Temperature
-	*/
-	static GBitmap *BT_image;
-	static BitmapLayer *BT_icon_layer; //Layer for the BT connection
-
-	static GBitmap *Batt_image;
-	static BitmapLayer *Batt_icon_layer; //Layer for the Battery status
-
-
-//Define and initialize variables
-	//FONTS
-	GFont font_date;        // Font for date
-	GFont font_time;        // Font for time
-	GFont font_update;      // Font for last update
-	GFont font_temperature;	// Font for the temperature
-
-	//Vibe Control
-	bool BTConnected = true;
-
-	//Date & Time	
-	static char last_update[]="00:00 ";
-	static int initial_minute;
-
-	static char weekday_text[] = "          ";
-	static char date_text[] = "XXX 00";
-	static char month_text[] = "             ";
-	static char day_text[] = "31";
-	static char day_month[]= "31 SEPTEMBER"; 
-	static char time_text[] = "00:00"; 
-
-	//WORLD CLOCK
-	int intLocalTime  = 0;
-	int local_hours= 0;
-	int local_min=0;
-	int TZ_min=0;
-
-	static char tz1_name[]="             ";
-	int intTZ1  = 0;
-	int tz1_hours= 0;
-	int tz1_min=0;
-	static char tz2_name[]="             ";
-	int intTZ2  = 0;
-	int tz2_hours= 0;
-	int tz2_min=0;
-	static char tz3_name[]="             ";
-	int intTZ3  = 0;
-	int tz3_hours= 0;
-	int tz3_min=0;
-	
-	static char TZ1[] = "00:00";
-	static char TZ2[] = "00:00";
-	static char TZ3[] = "00:00";
-
-	bool translate_sp = true;
-	static char language[] = "E";
-	int intLanguage = 100;
-	bool color_inverted = false;
-	bool blninverted =  false;
-
-	InverterLayer *inv_layer;
-
-
-enum TimeZoneKey {
-  Language_KEY = 0x0,        // TUPLE_INT
-  LocalTime_KEY = 0x1,        // TUPLE_INT
-  TZ1Name_KEY = 0x2,        // TUPLE_CSTRING 
-  TZ1Time_KEY = 0x3,      // TUPLE_INT
-  TZ2Name_KEY = 0x4,        // TUPLE_CSTRING 
-  TZ2Time_KEY = 0x5,      // TUPLE_INT
-  TZ3Name_KEY = 0x6,        // TUPLE_CSTRING 
-  TZ3Time_KEY = 0x7,      // TUPLE_INT
-  INVERT_COLOR_KEY = 0x8,  // TUPLE_INT
+//Pebble KEYS
+enum TripTimeKeys {
+	LOCAL_NAME_KEY = 0,       // TUPLE_CSTRING
+	LOCAL_TZ_KEY = 1, 		// TUPLE_INT
+	LOCAL_TZNAME_KEY = 2,     // TUPLE_CSTRING
+	DUAL_NAME_KEY = 3,  		// TUPLE_CSTRING
+	DUAL_TZ_KEY = 4, 			// TUPLE_INT
+	DUAL_TZNAME_KEY = 5,  	// TUPLE_CSTRING
+	LOCAL_TEMP_KEY = 6,     // TUPLE_CSTRING
+	LOCAL_ICON_KEY = 7,     // TUPLE_INT
+	DUAL_TEMP_KEY = 8,     // TUPLE_CSTRING
+	DUAL_ICON_KEY = 9,     // TUPLE_INT
+	DUAL_NAME2_KEY = 10, //TUPLE_CSTRING
+	DUAL_TZ2_KEY = 11, //TUPLE_INT
+	DUAL_TEMP2_KEY = 12, //TUPLE_CSTRING
+	DUAL_ICON2_KEY = 13, //TUPLE_INT
+	DUAL_NAME3_KEY = 14, //TUPLE_CSTRING
+	DUAL_TZ3_KEY = 15, //TUPLE_INT
+	DUAL_TEMP3_KEY = 16, //TUPLE_CSTRING
+	DUAL_ICON3_KEY = 17, //TUPLE_INT
 };
 
-static const uint32_t TimeZones[] = {
-	-12,//(GMT -12:00) Eniwetok, Kwajalein
-	-11,//(GMT -11:00) Midway Island, Samoa
-	-10,//(GMT -10:00) Hawaii
-	-9,// (GMT -9:00) Alaska
-	-8,// (GMT -8:00) Pacific Time (US & Canada)
-	-7,// (GMT -7:00) Mountain Time (US & Canada)
-	-6,// (GMT -6:00) Central Time (US & Canada), Mexico City
-	-5,// (GMT -5:00) Eastern Time (US & Canada), Bogota, Lima
-	-4,// (GMT -4:30) Caracas
-	-4,// (GMT -4:00) Atlantic Time (Canada), La Paz, Santiago
-	-3,// (GMT -3:30) Newfoundland
-	-3,// (GMT -3:00) Brazil, Buenos Aires, Georgetown
-	-2,// (GMT -2:00) Mid-Atlantic
-	-1,// (GMT -1:00 hour) Azores, Cape Verde Islands
-	0, // (GMT) Western Europe Time, London, Lisbon, Casablanca
-	1, // (GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris
-	2, // (GMT +2:00) South Africa, Cairo
-	3, // (GMT +3:00) Baghdad, Riyadh, Kaliningrad
-	3, // (GMT +3:30) Tehran
-	4, // (GMT +4:00) Abu Dhabi, Muscat, Yerevan, Baku, Tbilisi, Moscow, St. Petersburg
-	4, // (GMT +4:30) Kabul
-	5, // (GMT +5:00) Islamabad, Karachi, Tashkent
-	5, // (GMT +5:30) Mumbai, Kolkata, Chennai, New Delhi
-	5, // (GMT +5:45) Kathmandu
-	6, // (GMT +6:00) Almaty, Dhaka, Colombo, Ekaterinburg
-	6, // (GMT +6:30) Yangon, Cocos Islands
-	7, // (GMT +7:00) Bangkok, Hanoi, Jakarta
-	8, // (GMT +8:00) Beijing, Perth, Singapore, Hong Kong
-	9, // (GMT +9:00) Tokyo, Seoul, Osaka, Sapporo
-	9, // (GMT +9:30) Adelaide, Darwin
-	10,// (GMT +10:00) Eastern Australia, Guam, Yakutsk
-	11,// (GMT +11:00) Magadan, Solomon Islands, New Caledonia, Vladivostok
-	12,// (GMT +12:00) Auckland, Wellington, Fiji, Kamchatka
-};
-
-static const char *WEEKDAYS[] = {
-	NULL,
-	//SPANISH - 0
-	"Lunes",
-	"Martes",
-	"Miércoles",
-	"Jueves",
-	"Viernes",
-	"Sábado", 
-	"Domingo", 
-	//ITALIAN - 1
-	"Lunedi",
-	"Martedi",
-	"Mercoledi", 
-	"Giovedi", 
-	"Venerdi", 
-	"Sabato", 
-	"Domenica", 
-	//GERMAN - 2
-	"Montag", 
-	"Dienstag", 
-	"Mittwoch", 
-	"Donnerstag", 
-	"Freitag", 
-	"Samstag", 
-	"Sonntag",
-	//CZECH - 3
-	"Pondělí",
-	"Úterý", 
-	"Streda", 
-	"Čtvrtek", 
-	"Pátek", 
-	"Sobota", 
-	"Neděle", 
-	//FRENCH - 4
-	"Lundi",
-	"Mardi", 
-	"Mercredi",
-	"Jeudi", 
-	"Vendredi", 
-	"Samedi", 
-	"Dimanche", 
-	//PORTUGUESE - 5
-	"Segunda", 
-	"Terça", 
-	"Quarta",
-	"Quinta", 
-	"Sexta", 
-	"Sábado", 
-	"Domingo", 
-	//FINNISH - 6
-	"Maanantai", 
-	"Tiistai", 
-	"Keskiviikko",
-	"Torstai", 
-	"Perjantai",
-	"Lauantai",
-	"Sunnuntai", 
-	//DUTCH - 7
-	"Maandag", 
-	"Dinsdag", 
-	"Woensdag", 
-	"Donderdag",
-	"Vrijdag", 
-	"Zaterdag", 
-	"Zondag", 
-	//POLISH - 8
-	"Poniedzialek",
-	"Wtorek", 
-	"Sroda", 
-	"Czwartek",
-	"Piątek", 
-	"Sobota",
-	"Niedziela",
-	//SWEDISH - 9
-	"Måndag",
-	"Tisdag", 
-	"Onsdag", 
-	"Torsdag", 
-	"Fredag", 
-	"Lördag",
-	"Söndag ",
-	//DANISH - 10
-	"Mandag",
-	"Tirsdag",
-	"Onsdag",
-	"Torsdag",
-	"Fredag", 
-	"Lørdag",
-	"Søndag ",
-	//CATALAN - 11
-	"Dilluns", 
-	"Dimarts",
-	"Dimecres", 
-	"Dijous", 
-	"Divendres",
-	"Dissabte",
-	"Diumenge ",
-	//HUNGARIAN - 12
-	"Hétfo",
-	"Kedd", 
-	"Szerda",
-	"Csütörtök",
-	"Péntek", 
-	"Szombat",
-	"Vasárnap", 
-	//NORWEGIAN - 13
-	"Mandag",
-	"Tirsdag",
-	"Onsdag",
-	"Torsdag",
-	"Fredag", 
-	"Lørdag",
-	"Søndag ",  
-};
-
-static const char *MONTHS[] = {
-	NULL,
-	 //SPANISH - 0
-	" enero",
-	" febrero",
-	" marzo",
-	" abril",
-	" mayo",
-	" junio",
-	" julio",
-	" agosto", 
-	" septiembre",
-	" octubre", 
-	" noviembre", 
-	" diciembre", 
-	//ITALIAN - 1
-	" gennaio", 
-	" febbraio",
-	" marzo",
-	" aprile",
-	" maggio",
-	" giugno",
-	" luglio",
-	" agosto",
-	" settembre",
-	" ottobre",
-	" novembre",
-	" dicembre",
-	//GERMAN - 2
-	".Januar",
-	".Februar",
-	".März",
-	".April",
-	".Mai", 
-	".Juni", 
-	".Juli", 
-	".August",
-	".September",
-	".Oktober",
-	".November",
-	".Dezember",
-	//CZECH - 3
-	"Leden ",
-	"Únor ",
-	"Brezen ",
-	"Duben ", 
-	"Květen ", 
-	"Červen ",
-	"Červenec ", 
-	"Srpen ",
-	"Zárí ",
-	"Ríjen ",
-	"Listopad ",
-	"Prosinec ",
-	//FRENCH - 4
-	" janvier",
-	" février", 
-	" mars", 
-	" avril", 
-	" mai", 
-	" juin", 
-	" juillet", 
-	" août", 
-	" septembre", 
-	" octobre",
-	" novembre", 
-	" décembre", 
-	//PORTUGUESE - 5
-	" Janeiro", 
-	" Fevereiro", 
-	" Março", 
-	" Abril",
-	" Maio",
-	" Junho",
-	" Julho",
-	" Agosto",
-	" Setembro",
-	" Outubro",
-	" Novembro",
-	" Dezembro",
-	//FINNISH - 6
-	". Tammikuu",
-	". Helmikuu", 
-	". Maaliskuu",
-	". Huhtikuu", 
-	". Toukokuu", 
-	". Kesäkuu", 
-	". Heinäkuu", 
-	". Elokuu", 
-	". Syyskuu", 
-	". Lokakuu", 
-	". Marraskuu", 
-	". Joulukuu", 
-	//DUTCH - 7
-	" Januari", 
-	" Februari",
-	" Maart",
-	" April",
-	" Mei", 
-	" Juni", 
-	" Juli", 
-	" Augustus", 
-	" September", 
-	" Oktober", 
-	" November",
-	" December", 
-	//POLISH - 8
-	" stycznia",
-	" lutego", 
-	" marca", 
-	" kwietnia", 
-	" maja", 
-	" czerwca",
-	" lipca", 
-	" sierpnia",
-	" wrzesnia",
-	" pazdziernika",
-	" listopada", 
-	" grudnia", 
-	//SWEDISH - 9
-	" Januari", 
-	" Februari",
-	" Mars", 
-	" April", 
-	" Maj", 
-	" Juni",
-	" Juli", 
-	" Augusti",
-	" September", 
-	" Oktober",
-	" November", 
-	" December", 
-	//DANISH - 10
-	". Januar",
-	". Februar", 
-	". Marts", 
-	". April", 
-	". Maj", 
-	". Juni", 
-	". Juli",
-	". August",
-	". September", 
-	". Oktober", 
-	". November",
-	". December",
-	//CATALAN - 11
-	" Gener", 
-	" Febrer", 
-	" Març", 
-	" Abril", 
-	" Maig", 
-	" Juny",
-	" Juliol", 
-	" Agost", 
-	" Setembre", 
-	" Octubre", 
-	" Novembre", 
-	" Desembre", 
-	//HUNGARIAN - 12
-	"január ", 
-	"február ", 
-	"március ",
-	"április ", 
-	"május ", 
-	"június ", 
-	"július ", 
-	"augusztus ", 
-	"szeptember ", 
-	"október ",
-	"november ", 
-	"december ", 
-	//NORWEGIAN - 13
-	". januar", 
-	". februar", 
-	". mars", 
-	". april", 
-	". mai", 
-	". juni", 
-	". juli", 
-	". august", 
-	". september", 
-	". oktober", 
-	". november", 
-	". desember", 
-};
-
-//**************************//
-// Check the Battery Status //
-//**************************//
-
-static void handle_battery(BatteryChargeState charge_state) {
-          static char battery_text[] = "100%";
+//Bitmaps
+static const uint32_t WEATHER_ICONS[] = {
+  RESOURCE_ID_ICON_CLEAR_DAY,
+  RESOURCE_ID_ICON_CLEAR_NIGHT,
+  RESOURCE_ID_ICON_WIND,
+  RESOURCE_ID_ICON_COLD,
+  RESOURCE_ID_ICON_HOT,
+  RESOURCE_ID_ICON_PARTLY_CLOUDY_DAY,
+  RESOURCE_ID_ICON_PARTLY_CLOUDY_NIGHT,
+  RESOURCE_ID_ICON_FOG,
+  RESOURCE_ID_ICON_RAIN,
+  RESOURCE_ID_ICON_SNOW,
+  RESOURCE_ID_ICON_SLEET,
+  RESOURCE_ID_ICON_SNOW_SLEET,
+  RESOURCE_ID_ICON_RAIN_SLEET,
+  RESOURCE_ID_ICON_RAIN_SNOW,
+  RESOURCE_ID_ICON_CLOUDY,
+  RESOURCE_ID_ICON_THUNDER,
+  RESOURCE_ID_ICON_NA,
+  RESOURCE_ID_ICON_DRIZZLE,
+  RESOURCE_ID_TakeOff,
+  RESOURCE_ID_Landing,
+}; 
 	
-	//kill previous batt_image to avoid invalid ones.
-	if (Batt_image) {gbitmap_destroy(Batt_image);}
-    bitmap_layer_set_bitmap(Batt_icon_layer, NULL);
+//Variables
+	static char localtime_text[] = "00:00";
+	static char localweekday_text[] = "XXXXXXXXXXXX";
+	static char localmonth_text[] = "XXXXXXXXXXXXX";
+	static char localdate_text[] = "XXXXXXXXXXXXXXXXXXXXXXXXX";
 
-  if (charge_state.is_charging) {
-    //snprintf(battery_text, sizeof(battery_text), "charging");
-			  Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_CHAR); 
-              bitmap_layer_set_bitmap(Batt_icon_layer, Batt_image);
-  } else {
-	  //snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
+	static char dualtime_text[] = "00:00";
+	static char dualweekday_text[] = "XXXXXXXXXXXX";
+	static char dualmonth_text[] = "XXXXXXXXXXXXX";
 
+	static char dualtime2_text[] = "00:00";
+	static char dualweekday2_text[] = "XXXXXXXXXXXX";
+	static char dualmonth2_text[] = "XXXXXXXXXXXXX";
+
+	static char dualtime3_text[] = "00:00";
+	static char dualweekday3_text[] = "XXXXXXXXXXXX";
+	static char dualmonth3_text[] = "XXXXXXXXXXXXX";
+
+	int localtz=0;
+	int dualtz=0;
+	int dualtz2=0;
+	int dualtz3=0;
+	int timediff=0; //dualtz-localtz
+	int timediff2=0; //dualtz2-localtz
+	int timediff3=0; //dualtz3-localtz
+
+	char localname[] = "XXXXXXXXXXXXXXX";
+	char dualname[] = "XXXXXXXXXXXXXXX";
+	char dualname2[] = "XXXXXXXXXXXXXXX";
+	char dualname3[] = "XXXXXXXXXXXXXXX";
+
+	char LocalTZName[]  = "     ";
+	char DualTZName[]  = "     ";
+
+	char strLocalTemp[] = "    ";
+    char strDualTemp[] = "    ";
+	char strDualTemp2[] = "    ";
+	char strDualTemp3[] = "    ";
+
+	char strLocalAMPMInd[]  = "  ";
+	char strDualAMPMInd[]  = "  ";
+
+	static AppTimer *timer;
+	uint32_t timeout_ms = 1800000; //30min (1min = 60000)
+
+	// Setup messaging
+	const int inbound_size = 512;
+	const int outbound_size = 512;
+	
+// BEGIN AUTO-GENERATED UI CODE; DO NOT MODIFY
+InverterLayer *inv_layer;
+static Window *s_window;
+static GFont s_res_gothic_14;
+static GFont s_res_bitham_42_light;
+static GFont s_res_bitham_30_black;
+static GFont s_res_roboto_21_condensed;
+static GBitmap *s_res_takeoff;
+static GBitmap *s_res_landing;
+static GBitmap *s_res_landing2;
+static GBitmap *s_res_landing3;
+static TextLayer *LocalArea;
+static TextLayer *DualArea;
+
+static TextLayer *LocalTZ;
+static TextLayer *LocalTemp;
+static TextLayer *LocalTime;
+static TextLayer *LocalAMPMInd;
+static TextLayer *LocalDate;
+static TextLayer *LocalDay;
+static TextLayer *DualTime;
+//static TextLayer *DualAMPMInd;
+static TextLayer *DualDate;
+static TextLayer *DualDay;
+static TextLayer *DualTemp;
+//Timezone 2
+static TextLayer *DualArea2;
+static TextLayer *DualTime2;
+//static TextLayer *DualAMPMInd2;
+static TextLayer *DualDate2;
+static TextLayer *DualDay2;
+static TextLayer *DualTemp2;
+static TextLayer *DualTZName2;
+static BitmapLayer *Dual_img2;
+
+static BitmapLayer *Local_img;
+static BitmapLayer *Dual_img;
+static TextLayer *s_textlayer_1;
+static TextLayer *s_textlayer_2;
+
+//Timezone 3
+static TextLayer *DualArea3;
+static TextLayer *DualTime3;
+//static TextLayer *DualAMPMInd2;
+static TextLayer *DualDate3;
+static TextLayer *DualDay3;
+static TextLayer *DualTemp3;
+static TextLayer *DualTZName3;
+static BitmapLayer *Dual_img3;
+
+
+static void initialise_ui(void) {
+  s_window = window_create();
+  window_set_background_color(s_window, GColorBlack);
+  window_set_fullscreen(s_window, true);
+  
+  s_res_gothic_14 = fonts_get_system_font(FONT_KEY_GOTHIC_14);
+  s_res_bitham_42_light = fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
+  s_res_bitham_30_black = fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK);
+  s_res_roboto_21_condensed = fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21);
+	
+////////////////////
+// LOCAL TIMEZONE //
+////////////////////
+	
+//AREA
+  LocalArea = text_layer_create(GRect(3, 3, 137, 51));
+  text_layer_set_font(LocalArea, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)LocalArea);
+	
+//CITY NAME
+  s_textlayer_1 = text_layer_create(GRect(28, 2, 111, 17));
+  text_layer_set_background_color(s_textlayer_1, GColorClear);
+  text_layer_set_text(s_textlayer_1, localname);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)s_textlayer_1);
+    
+//DATE
+  LocalDate = text_layer_create(GRect(28, 14, 110, 16));
+  text_layer_set_background_color(LocalDate, GColorClear);
+  text_layer_set_text(LocalDate, localmonth_text);
+  text_layer_set_font(LocalDate, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)LocalDate);
+	
+//TIME
+  LocalTime = text_layer_create(GRect(45, 23, 93, 42));
+  text_layer_set_background_color(LocalTime, GColorClear);
+  text_layer_set_text(LocalTime, localtime_text);
+  text_layer_set_text_alignment(LocalTime, GTextAlignmentRight);
+  text_layer_set_font(LocalTime, s_res_bitham_30_black);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)LocalTime);
+	
+//WEATHER//
+
+//ICON
+  Local_img = bitmap_layer_create(GRect(4, 3, 20, 20));
+  bitmap_layer_set_bitmap(Local_img, s_res_takeoff);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)Local_img);
+
+//TEMPERATURE
+  LocalTemp = text_layer_create(GRect(4, 30, 30, 30)); //(GRect(73, 15, 65, 42));
+  text_layer_set_background_color(LocalTemp, GColorClear);
+  text_layer_set_text(LocalTemp, strLocalTemp);
+  text_layer_set_text_alignment(LocalTemp, GTextAlignmentRight);
+  text_layer_set_font(LocalTemp, s_res_roboto_21_condensed);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)LocalTemp);
+  
+    
+//////////////////////
+// DUAL TIMEZONE #1 //
+//////////////////////
+	
+  //AREA
+  DualArea = text_layer_create(GRect(3, 56, 137, 35));
+  text_layer_set_font(DualArea, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualArea);  
+  
+	
+ //CITY NAME
+  s_textlayer_2 = text_layer_create(GRect(28, 55, 100, 17));
+  text_layer_set_background_color(s_textlayer_2, GColorClear);
+  text_layer_set_text(s_textlayer_2, dualname);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)s_textlayer_2);
+  
+  //DAY OF THE WEEK
+  DualDay = text_layer_create(GRect(28, 66, 98, 16));
+  text_layer_set_background_color(DualDay, GColorClear);
+  text_layer_set_text(DualDay, dualweekday_text);
+  text_layer_set_font(DualDay, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualDay);
+	
+  //DATE
+  DualDate = text_layer_create(GRect(28, 76, 110, 16));
+  text_layer_set_background_color(DualDate, GColorClear);
+  text_layer_set_text(DualDate, dualmonth_text);
+  text_layer_set_font(DualDate, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualDate);
+  
+ //TIME
+  DualTime = text_layer_create(GRect(73, 66, 65, 45));
+  text_layer_set_background_color(DualTime, GColorClear);
+  text_layer_set_text(DualTime, dualtime_text);
+  text_layer_set_text_alignment(DualTime, GTextAlignmentRight);
+  text_layer_set_font(DualTime, s_res_roboto_21_condensed);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualTime);
+	
+  
+//WEATHER//
+	
+  //ICON
+  Dual_img = bitmap_layer_create(GRect(4, 57, 20, 20));
+  bitmap_layer_set_bitmap(Dual_img, s_res_landing);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)Dual_img);
+	
+  //TEMPERATURE
+  DualTemp = text_layer_create(GRect(4, 73, 20, 20));
+  text_layer_set_background_color(DualTemp, GColorClear);
+  text_layer_set_text(DualTemp, strDualTemp);
+  text_layer_set_text_alignment(DualTemp, GTextAlignmentRight);
+  text_layer_set_font(DualTemp, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualTemp);
+  
+//////////////////////
+// DUAL TIMEZONE #2 //
+//////////////////////
+	
+  //AREA
+  DualArea2 = text_layer_create(GRect(3, 93, 137, 35));
+  text_layer_set_font(DualArea2, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualArea2);	
+	
+  //CITY NAME
+  DualTZName2 = text_layer_create(GRect(28, 91, 100, 17));
+  text_layer_set_background_color(DualTZName2, GColorClear);
+  text_layer_set_text(DualTZName2, dualname2);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualTZName2);
+  
+  //DAY OF THE WEEK
+  DualDay2 = text_layer_create(GRect(28, 102, 98, 16));
+  text_layer_set_background_color(DualDay2, GColorClear);
+  text_layer_set_text(DualDay2, dualweekday2_text);
+  text_layer_set_font(DualDay2, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualDay2);
+	
+  //DATE
+  DualDate2 = text_layer_create(GRect(28, 112, 110, 16));
+  text_layer_set_background_color(DualDate2, GColorClear);
+  text_layer_set_text(DualDate2, dualmonth2_text);
+  text_layer_set_font(DualDate2, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualDate2);
+  	
+  //TIME
+  DualTime2 = text_layer_create(GRect(73, 102, 65, 45));
+  text_layer_set_background_color(DualTime2, GColorClear);
+  text_layer_set_text(DualTime2, dualtime2_text);
+  text_layer_set_text_alignment(DualTime2, GTextAlignmentRight);
+  text_layer_set_font(DualTime2, s_res_roboto_21_condensed);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualTime2);
+	
+//WEATHER//
+	
+  //ICON
+  Dual_img2 = bitmap_layer_create(GRect(4, 94, 20, 20));
+  bitmap_layer_set_bitmap(Dual_img2, s_res_landing2);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)Dual_img2);
+	
+  //TEMPERATURE
+  DualTemp2 = text_layer_create(GRect(4, 110, 20, 20));
+  text_layer_set_background_color(DualTemp2, GColorClear);
+  text_layer_set_text(DualTemp2, strDualTemp2);
+  text_layer_set_text_alignment(DualTemp2, GTextAlignmentRight);
+  text_layer_set_font(DualTemp2, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualTemp2);
+ 
+ //////////////////////
+// DUAL TIMEZONE #3 //
+//////////////////////
+
+  //AREA
+  DualArea3 = text_layer_create(GRect(3, 130, 137, 35));
+  text_layer_set_font(DualArea3, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualArea3);
+	
+  //CITY NAME
+  DualTZName3 = text_layer_create(GRect(28, 128, 100, 17));
+  text_layer_set_background_color(DualTZName3, GColorClear);
+  text_layer_set_text(DualTZName3, dualname3); 
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualTZName3);
+	
+  //DAY OF THE WEEK
+  DualDay3 = text_layer_create(GRect(28, 139, 98, 16));
+  text_layer_set_background_color(DualDay3, GColorClear);
+  text_layer_set_text(DualDay3, dualweekday3_text);
+  text_layer_set_font(DualDay3, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualDay3);
+	
+  //DATE
+  DualDate3 = text_layer_create(GRect(28, 149, 110, 16));
+  text_layer_set_background_color(DualDate3, GColorClear);
+  text_layer_set_text(DualDate3, dualmonth3_text);
+  text_layer_set_font(DualDate3, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualDate3);
+	
+  //TIME
+  DualTime3 = text_layer_create(GRect(73, 141, 65, 45));
+  text_layer_set_background_color(DualTime3, GColorClear);
+  text_layer_set_text(DualTime3, dualtime3_text);
+  text_layer_set_text_alignment(DualTime3, GTextAlignmentRight);
+  text_layer_set_font(DualTime3, s_res_roboto_21_condensed);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualTime3);
+	
+//WEATHER//
+	
+  //ICON
+  Dual_img3 = bitmap_layer_create(GRect(4, 131, 20, 20));
+  bitmap_layer_set_bitmap(Dual_img3, s_res_landing3);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)Dual_img3);
 	  
-	  //WHILE RUNNING LOW, BATT STATUS WILL ALWAYS DISPLAY  
-         //set the new batt_image
-         //DO NOT display the batt_icon all the time. it is annoying.
-         if (charge_state.charge_percent <=10) //If the charge is between 0% and 10%
-         {
-			 Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_EMPTY);
-             bitmap_layer_set_bitmap(Batt_icon_layer, Batt_image);
-         }
+  //DualTemp 2
+  DualTemp3 = text_layer_create(GRect(4, 147, 20, 20));
+  text_layer_set_background_color(DualTemp3, GColorClear);
+  text_layer_set_text(DualTemp3, strDualTemp3);
+  text_layer_set_text_alignment(DualTemp3, GTextAlignmentRight);
+  text_layer_set_font(DualTemp3, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)DualTemp3);
+	
+////////////////////
+// LAYER INVERTER //
+////////////////////
+	
+	//Invert layer to better differentiate Local and Dual timezones
+	inv_layer = inverter_layer_create(GRect(3, 54, 137, 111));
+	layer_add_child(window_get_root_layer(s_window), (Layer*) inv_layer);
+  
 }
+
+static void destroy_ui(void) {
+  window_destroy(s_window);
+	/*
+  text_layer_destroy(LocalArea);
+  text_layer_destroy(DualArea);
+  text_layer_destroy(LocalTZ);
+  text_layer_destroy(LocalTemp);
+  text_layer_destroy(LocalTime);
+  text_layer_destroy(LocalDate);
+  text_layer_destroy(LocalDay);
+  text_layer_destroy(DualTime);
+  text_layer_destroy(DualDate);
+  text_layer_destroy(DualDay);
+  text_layer_destroy(DualTemp);
+  bitmap_layer_destroy(Local_img);
+  bitmap_layer_destroy(Dual_img);
+  text_layer_destroy(s_textlayer_1);
+  text_layer_destroy(s_textlayer_2);
+  gbitmap_destroy(s_res_takeoff);
+  gbitmap_destroy(s_res_landing);
+  */
+}
+// END AUTO-GENERATED UI CODE
+
+static void handle_window_unload(Window* window) {
+  destroy_ui();
 }
 
-//******************************//
-// Handle Bluetooth Connection  //
-//*****************************//
-static void handle_bluetooth(bool connected) 
-{
-  	//text_layer_set_text(BT_Layer, connected ? "C" : "D");
+void show_main(void) {
+  initialise_ui();
+  window_set_window_handlers(s_window, (WindowHandlers) {
+    .unload = handle_window_unload,
+  });
+  window_stack_push(s_window, true);
+}
 
-	//draw the BT icon if connected
+void hide_main(void) {
+  window_stack_remove(s_window, true);
+}
 
-	if(connected ==true)
-	{
-		if (BT_image) {gbitmap_destroy(BT_image);}
-			BT_image = gbitmap_create_with_resource(RESOURCE_ID_BT_CONNECTED);
-            bitmap_layer_set_bitmap(BT_icon_layer, BT_image);
-		if (BTConnected == false){
-			//Vibes to alert connection
-			vibes_double_pulse();
-			BTConnected = true;
-		}
-	}
-	else
-	{
-		 //Kill the previous image
-		    if (BT_image) {gbitmap_destroy(BT_image);}
-            bitmap_layer_set_bitmap(BT_icon_layer, NULL);
-		if (BTConnected == true){
-			//Vibes to alert disconnection
-			vibes_long_pulse();
-			BTConnected = false;
-		}
-
-	}
-
-
-} //handle_bluetooth
-
-
-//Invert colors
-void InvertColors(bool inverted)
-{
+void getDualTime(){
 	
-	if (inverted){
-		//Inverter layer
-		if (blninverted == false){		
-			inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
-			layer_add_child(window_get_root_layer(my_window), (Layer*) inv_layer);
-			blninverted =  true;
-	    }
-	}
-	
-	else{
-		if(blninverted){
-			inverter_layer_destroy(inv_layer);
-			blninverted = false;}
-	}
+	time_t actualPtr = time(NULL);
 
 	
-}// END - Inver colors
+			//Read persistent storage to calculate the time difference
+	
+			if (persist_exists(LOCAL_TZ_KEY)){localtz = persist_read_int(LOCAL_TZ_KEY);} 
+			if (persist_exists(DUAL_TZ_KEY)){dualtz = persist_read_int(DUAL_TZ_KEY);}
+			if (persist_exists(DUAL_TZ2_KEY)){dualtz2 = persist_read_int(DUAL_TZ2_KEY);}
+			if (persist_exists(DUAL_TZ3_KEY)){dualtz3 = persist_read_int(DUAL_TZ3_KEY);}
+			
+		
+			timediff= dualtz - localtz;
+			timediff2= dualtz2 - localtz;
+			timediff3= dualtz3 - localtz;
+	
+			
+			//Define and Calculate Time Zones
+			//TIME ZONE 1
+			struct tm *tzPtr = gmtime(&actualPtr);
+		
+			tzPtr->tm_sec += timediff;
+			//Since mktime() is not realible in Pebble's firmware, use PUtils to built the dual time.
+			time_t dualtime = p_mktime(tzPtr);
+			struct tm *tz1Ptr = gmtime(&dualtime);
+	
+	
+			if (clock_is_24h_style()){strftime(dualtime_text, sizeof(dualtime_text), "%H:%M", tz1Ptr);}
+			else {strftime(dualtime_text, sizeof(dualtime_text), "%I:%M", tz1Ptr);}
+	
 
+				//Remove the leading 0s
+				if (dualtime_text[0]=='0') {memcpy(&dualtime_text," ",1);}
+	
+			//Calculate the Dual Zone Date
+			char *sys_locale = setlocale(LC_ALL, "");
 
-//**************************//
-//** Get the current date **//
-//**************************//
+			if (strcmp("en_US", sys_locale) == 0) {
+			  strftime(dualmonth_text,sizeof(dualmonth_text),"%b %e %Y",tz1Ptr);
+			
+			} else {
+			  strftime(dualmonth_text,sizeof(dualmonth_text),"%e %b %Y",tz1Ptr);
+			}
+			
+			strftime(dualweekday_text,sizeof(dualweekday_text),"%A",tz1Ptr);
+	
+			//TIME ZONE 2
+			struct tm *tzPtr2 = gmtime(&actualPtr);
+		
+			tzPtr2->tm_sec += timediff2;
+			//Since mktime() is not realible in Pebble's firmware, use PUtils to built the dual time.
+			time_t dualtime2 = p_mktime(tzPtr2);
+			struct tm *tz2Ptr = gmtime(&dualtime2);
+	
+	
+			if (clock_is_24h_style()){strftime(dualtime2_text, sizeof(dualtime2_text), "%H:%M", tz2Ptr);}
+			else {strftime(dualtime2_text, sizeof(dualtime2_text), "%I:%M", tz2Ptr);}
+	
+
+				//Remove the leading 0s
+				if (dualtime2_text[0]=='0') {memcpy(&dualtime2_text," ",1);}
+	
+			//Calculate the Dual Zone Date
+			//char *sys_locale = setlocale(LC_ALL, "");
+
+			if (strcmp("en_US", sys_locale) == 0) {
+			  strftime(dualmonth2_text,sizeof(dualmonth2_text),"%b %e %Y",tz2Ptr);
+			
+			} else {
+			  strftime(dualmonth2_text,sizeof(dualmonth2_text),"%e %b %Y",tz2Ptr);
+			}
+			
+			strftime(dualweekday2_text,sizeof(dualweekday2_text),"%A",tz2Ptr);
+	
+			//TIME ZONE 3
+			struct tm *tzPtr3 = gmtime(&actualPtr);
+		
+			tzPtr3->tm_sec += timediff3;
+			//Since mktime() is not realible in Pebble's firmware, use PUtils to built the dual time.
+			time_t dualtime3 = p_mktime(tzPtr3);
+			struct tm *tz3Ptr = gmtime(&dualtime3);
+	
+	
+			if (clock_is_24h_style()){strftime(dualtime3_text, sizeof(dualtime3_text), "%H:%M", tz3Ptr);}
+			else {strftime(dualtime3_text, sizeof(dualtime3_text), "%I:%M", tz3Ptr);}
+	
+
+				//Remove the leading 0s
+				if (dualtime3_text[0]=='0') {memcpy(&dualtime3_text," ",1);}
+	
+			//Calculate the Dual Zone Date
+			//char *sys_locale = setlocale(LC_ALL, "");
+
+			if (strcmp("en_US", sys_locale) == 0) {
+			  strftime(dualmonth3_text,sizeof(dualmonth3_text),"%b %e %Y",tz3Ptr);
+			
+			} else {
+			  strftime(dualmonth3_text,sizeof(dualmonth3_text),"%e %b %Y",tz3Ptr);
+			}
+			
+			strftime(dualweekday3_text,sizeof(dualweekday3_text),"%A",tz3Ptr);
+			
+	
+			//DISPLAY THE TIME ZONES	
+			text_layer_set_text(DualTime, dualtime_text);
+			text_layer_set_text(DualDay,dualweekday_text);
+			text_layer_set_text(DualDate,dualmonth_text); 
+			//if(!clock_is_24h_style()){strftime(strDualAMPMInd, sizeof(strDualAMPMInd), "%p", tz1Ptr);} 
+			text_layer_set_text(DualTime2, dualtime2_text);
+			text_layer_set_text(DualDay2,dualweekday2_text);
+			text_layer_set_text(DualDate2,dualmonth2_text);
+	
+			text_layer_set_text(DualTime3, dualtime3_text);
+			text_layer_set_text(DualDay3,dualweekday3_text);
+			text_layer_set_text(DualDate3,dualmonth3_text);
+}
+
+//*********************************//
+//** Get the current date & time **//
+//*********************************//
 void getDate()
 {
 	//Get the date
 	time_t actualPtr = time(NULL);
 	struct tm *tz1Ptr = gmtime(&actualPtr);
 	
-	
-	//Try new translation method
+	//get the local date
+	char *sys_locale = setlocale(LC_ALL, "");
 		
-		//Get the number of the weekday
-		strftime(weekday_text,sizeof(weekday_text),"%u",tz1Ptr);
-		int ia = weekday_text[0] - '0'; 
-		int ib = (intLanguage*7)+ia;
-	
-		//Get the number of the month	
-		strftime(month_text,sizeof(month_text),"%m",tz1Ptr);
-		int ic = month_text[1] - '0';
-		if (month_text[0]=='1'){ic=ic+10;}			
-		int id = (intLanguage*12)+ic;
-	
-	if(intLanguage==100){ //ENGLISH
-		
-		//remove the chinese week day
-		//if (chinese_day) {gbitmap_destroy(chinese_day);}
-		//bitmap_layer_set_bitmap(chinese_day_layer, NULL);
-		
-		//Get the English fortmat
-		strftime(month_text,sizeof(month_text),"%B %e",tz1Ptr);
-		strftime(weekday_text,sizeof(weekday_text),"%A",tz1Ptr);
-		
-		text_layer_set_text(Weekday_Layer,weekday_text); //Update the weekday layer  
-		text_layer_set_text(date_layer,month_text); 
-		
+	if (strcmp("en_US", sys_locale) == 0) {
+		strftime(localmonth_text,sizeof(localmonth_text),"%b %e %Y",tz1Ptr);
+			
+	} else {
+		strftime(localmonth_text,sizeof(localmonth_text),"%e %b %Y",tz1Ptr);
 	}
-	/*
-	else if (language==99){//CHINESE
-		
-		//Work on retrieving the correct weekday
-		//Get the Month
-		strftime(month_text,sizeof(month_text),"%m/%d",tz1Ptr);
-		
-		//Clean un the text layer
-		text_layer_set_text(Weekday_Layer,"");
-		
-		if (chinese_day) {gbitmap_destroy(chinese_day);}
-		chinese_day = gbitmap_create_with_resource(CHINESE_DAYS[ia-1]);
-		//Display the weekday in chinese
-		bitmap_layer_set_bitmap(chinese_day_layer, chinese_day);
-		text_layer_set_text(date_layer, month_text);
-		
-	}
-	*/
-
-	else{
-		//remove the chinese week day
-		//if (chinese_day) {gbitmap_destroy(chinese_day);}
-		//bitmap_layer_set_bitmap(chinese_day_layer, NULL);
-
-		//Set the weekeday
-		text_layer_set_text(Weekday_Layer, WEEKDAYS[ib]); //Update the weekday layer  
-		
-		
-		//Get the day
-		strftime(day_month,sizeof(day_month),"%e",tz1Ptr);
-		
-		//Set the month
-		//text_layer_set_text(date_layer, MONTHS[id]);
-				 if ((intLanguage == 12)||(intLanguage == 3)){
-					memcpy(&month_text, MONTHS[id], strlen(MONTHS[id])+1);
-					text_layer_set_text(date_layer,strncat(month_text,day_month,strlen(month_text)));} //Czech or Hungarian
-				else{text_layer_set_text(date_layer,strncat(day_month,MONTHS[id],strlen(MONTHS[id]))); }
-		
-	}
-
-
-
+	
+	strftime(localweekday_text,sizeof(localweekday_text),"%A",tz1Ptr);
+	
+	//concatenate week day and date
+	//clean up the string
+	memset(&localdate_text[0], 0, sizeof(localdate_text));
+	strcat(localdate_text, localweekday_text);
+	strcat(localdate_text, ", ");
+	strcat(localdate_text, localmonth_text);
+	//set the layers
+	//text_layer_set_text(LocalDay,localweekday_text);
+	//text_layer_set_text(LocalDate,localmonth_text); 
+	text_layer_set_text(LocalDate,localdate_text); 
 }
 
-void getTimeZones(){
+void getTime()
+	{
+		clock_copy_time_string(localtime_text, sizeof(localtime_text));
+			
+		//Set the Local Time
+        text_layer_set_text(LocalTime, localtime_text);
+		
+		//Set the Dual Time
+		getDualTime();
 	
-	time_t actualPtr = time(NULL);
-
-			//Define and Calculate Time Zones
-			//TIME ZONE 1
-				struct tm *tz1Ptr = gmtime(&actualPtr);
-				tz1Ptr->tm_hour += tz1_hours;
-				tz1Ptr->tm_min += tz1_min;
-		
-				//try to fix the timezone when half and hour diff
-				if (tz1Ptr->tm_min >=60){
-					tz1Ptr->tm_hour = 1 + tz1Ptr->tm_hour;
-					tz1Ptr->tm_min = tz1Ptr->tm_min - 60;
-				}
-		
-				//try to fix the timezone when half and hour diff
-				if (tz1Ptr->tm_min <0){
-					tz1Ptr->tm_hour = tz1Ptr->tm_hour - 1;
-					tz1Ptr->tm_min = 60 + tz1Ptr->tm_min;
-				}
-
-				//try to fix the timezone when negative
-		
-				if (tz1Ptr->tm_hour <0){
-					tz1Ptr->tm_hour = 24 + tz1Ptr->tm_hour;
-				}
-		
-				//try to fix the timezone when more than 24
-				if (tz1Ptr->tm_hour >=24){
-					tz1Ptr->tm_hour = tz1Ptr->tm_hour - 24;
-				}
-
-				if (clock_is_24h_style()){strftime(TZ1, sizeof(TZ1), "%H:%M", tz1Ptr);}
-				else {strftime(TZ1, sizeof(TZ1), "%I:%M", tz1Ptr);}
-			//TIME ZONE 2
-				struct tm *tz2Ptr = gmtime(&actualPtr);
-				tz2Ptr->tm_hour += tz2_hours;
-				tz2Ptr->tm_min += tz2_min;
-		
-				//try to fix the timezone when half and hour diff
-				if (tz2Ptr->tm_min >=60){
-					tz2Ptr->tm_hour = 1 + tz2Ptr->tm_hour;
-					tz2Ptr->tm_min = tz2Ptr->tm_min - 60;
-				}
-		
-				//try to fix the timezone when half and hour diff
-				if (tz2Ptr->tm_min <0){
-					tz2Ptr->tm_hour = tz2Ptr->tm_hour - 1;
-					tz2Ptr->tm_min = 60 + tz2Ptr->tm_min;
-				}
-
-				//try to fix the timezone when negative
-				if (tz2Ptr->tm_hour <0){
-					tz2Ptr->tm_hour = 24 + tz2Ptr->tm_hour;
-				}
-		
-				//try to fix the timezone when more than 24
-				if (tz2Ptr->tm_hour >=24){
-					tz2Ptr->tm_hour = tz2Ptr->tm_hour - 24;
-				}
-
-				if (clock_is_24h_style()){strftime(TZ2, sizeof(TZ2), "%H:%M", tz2Ptr);}
-				else{strftime(TZ2, sizeof(TZ2), "%I:%M", tz2Ptr);}
-			//TIME ZONE 3		
-				struct tm *tz3Ptr = gmtime(&actualPtr);
-				tz3Ptr->tm_hour += tz3_hours;
-				tz3Ptr->tm_min += tz3_min;
-		
-				//try to fix the timezone when half and hour diff
-				if (tz3Ptr->tm_min >=60){
-					tz3Ptr->tm_hour = 1 + tz3Ptr->tm_hour;
-					tz3Ptr->tm_min = tz3Ptr->tm_min - 60;
-				}
-		
-				//try to fix the timezone when half and hour diff
-				if (tz3Ptr->tm_min <0){
-					tz3Ptr->tm_hour = tz3Ptr->tm_hour - 1;
-					tz3Ptr->tm_min = 60 + tz3Ptr->tm_min;
-				}
-
-				//try to fix the timezone when negative
-				if (tz3Ptr->tm_hour <0){
-					tz3Ptr->tm_hour = 24 + tz3Ptr->tm_hour;
-				}
-
-				//try to fix the timezone when more than 24
-				if (tz3Ptr->tm_hour >=24){
-					tz3Ptr->tm_hour = tz3Ptr->tm_hour - 24;
-				}
-		
-				if (clock_is_24h_style()){strftime(TZ3, sizeof(TZ3), "%H:%M", tz3Ptr);}
-				else{strftime(TZ3, sizeof(TZ3), "%I:%M", tz3Ptr);}
-		
-
-			//DISPLAY THE TIME ZONES	
-			text_layer_set_text(WC1NAME_Layer, tz1_name);
-			text_layer_set_text(WC1TIME_Layer, TZ1);
-
-			text_layer_set_text(WC2NAME_Layer, tz2_name);
-			text_layer_set_text(WC2TIME_Layer, TZ2);
-
-			text_layer_set_text(WC3NAME_Layer, tz3_name);
-			text_layer_set_text(WC3TIME_Layer, TZ3);
-}
-/*********************************************************************************/
-/* Calculate the difference in hours and minutes between the local and dual zone */
-/*********************************************************************************/
-void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
-	
-	//Get the Local hours
-	local_hours= TimeZones[LocalZone];
-	local_min=0;
-
-	//Adjust the minutes
-	//LocalZone
-	if ((LocalZone == 8)||(LocalZone == 10)){local_min=-30;}
-	else if ((LocalZone == 18)||(LocalZone == 20)||(LocalZone == 22)||(LocalZone == 25)||(LocalZone == 29)){local_min=30;}
-	else if (LocalZone == 23){local_min=45;}
-	//TimeZone
-	TZ_min = 0;
-	if ((GMT == 8)||(GMT == 10)){TZ_min=-30;}
-	else if ((GMT == 18)||(GMT == 20)||(GMT ==22)||(GMT == 25)||(GMT == 29)){TZ_min=30;}
-	else if (GMT == 23){TZ_min=45;}
-	
-	//Get Number of hours
-	if (TimeZone == 1){
-			tz1_hours= TimeZones[GMT] - local_hours;
-			tz1_min=(0 + TZ_min) - local_min;
-	}
-	else if (TimeZone == 2){
-			tz2_hours= TimeZones[GMT] - local_hours;
-			tz2_min=(0 + TZ_min)- local_min;
-	}
-	else if (TimeZone == 3){
-			tz3_hours= TimeZones[GMT] - local_hours;
-			tz3_min=(0 + TZ_min) - local_min;
-	}
-	
-
-}
-
-//*****************//
-// AppSync options //
-//*****************//
-
-        static AppSync sync;
-        static uint8_t sync_buffer[128];
-
-
-
-        static void sync_tuple_changed_callback(const uint32_t key,
-                                        const Tuple* new_tuple,
-                                        const Tuple* old_tuple,
-                                        void* context) {
-
-        
-  // App Sync keeps new_tuple in sync_buffer, so we may use it directly
-  switch (key) {
-      case Language_KEY:
-	  	intLanguage = new_tuple->value->int8;  
-	  	persist_write_int(Language_KEY, intLanguage);
-	  
-	  	//Init the date
-		getDate();
-      	break;
-	  
-	  case LocalTime_KEY:
-	  	intLocalTime = new_tuple->value->int8;  
-	  	persist_write_int(LocalTime_KEY, intLocalTime);
-	  
-	  	CalculateTimeZone (intLocalTime,1,intTZ1);
-	  	CalculateTimeZone (intLocalTime,2,intTZ2);
-	  	CalculateTimeZone (intLocalTime,3,intTZ3);
-	  	getTimeZones();
-      	break;
-	  
-    case TZ1Name_KEY:
-  		persist_write_string(TZ1Name_KEY, new_tuple->value->cstring);
-		  //clean up the string
-		  memset(&tz1_name[0], 0, sizeof(tz1_name));
-	  	memcpy(&tz1_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
-	  	text_layer_set_text(WC1NAME_Layer, tz1_name);
-      	break;
-	  
-     case TZ1Time_KEY:
-	  	intTZ1 = new_tuple->value->int8;  
-	  	persist_write_int(TZ1Time_KEY, intTZ1);
-	  	
-	  	CalculateTimeZone (intLocalTime,1,intTZ1);
-	  	getTimeZones();
-      	break;
-	  
-	 case TZ2Name_KEY:
-  		persist_write_string(TZ2Name_KEY, new_tuple->value->cstring);
-		  //clean up the string
-		  memset(&tz2_name[0], 0, sizeof(tz2_name));
-	  	memcpy(&tz2_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
-	  	text_layer_set_text(WC2NAME_Layer, tz2_name);
-      	break;
-
-     case TZ2Time_KEY:
-	  	intTZ2 = new_tuple->value->int8;
-	  	persist_write_int(TZ2Time_KEY, intTZ2);
-	  
-	  	CalculateTimeZone (intLocalTime,2,intTZ2);
-	    getTimeZones();
-      	break;
-	  
-	 case TZ3Name_KEY:
-  		persist_write_string(TZ3Name_KEY, new_tuple->value->cstring);
-		  //clean up the string
-		  memset(&tz3_name[0], 0, sizeof(tz3_name));
-	  	memcpy(&tz3_name, new_tuple->value->cstring, strlen(new_tuple->value->cstring));
-	  	text_layer_set_text(WC3NAME_Layer, tz3_name);
-      	break;
-
-     case TZ3Time_KEY:
-		intTZ3 = new_tuple->value->int8;
-	  	persist_write_int(TZ3Time_KEY, intTZ3);
-	  
-	  	CalculateTimeZone (intLocalTime,3,intTZ3);
-	    getTimeZones();
-      	break;
-
-	 case INVERT_COLOR_KEY:
-		  color_inverted = new_tuple->value->uint8 != 0;
-		  persist_write_bool(INVERT_COLOR_KEY, new_tuple->value->uint8 != 0);
-	  		
-	  	  //refresh the layout
-	  	  InvertColors(color_inverted);
-		  break;
-  }
 }
 
 //************************//
@@ -884,249 +581,356 @@ void CalculateTimeZone(int LocalZone, int TimeZone, int GMT) {
 void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 {
 
-	if (units_changed & MINUTE_UNIT) 
-	{
-
-			/*
-			if (units_changed & DAY_UNIT)
-			{	
-			} // DAY CHANGES
-			*/
-		
-		
-			//Format the Local Time	
-			if (clock_is_24h_style())
-			{
-				strftime(time_text, sizeof(time_text), "%H:%M", tick_time);
-			}
-			else
-			{
-				strftime(time_text, sizeof(time_text), "%I:%M", tick_time);
-			}
+			//Set the AM/PM indicator
+			//if(clock_is_24h_style()){memcpy(&ampm_text,  "24H", strlen("24H"));}
+			//else {strftime(ampm_text, sizeof(ampm_text), "%p", tick_time);}
+			//text_layer_set_text(ampm_layer, ampm_text); //Update the weekday layer  
 
 
-  			text_layer_set_text(Time_Layer, time_text);
+       if (units_changed & MINUTE_UNIT)
+       {
+
+		   //update the time
+		   //if(!clock_is_24h_style()){strftime(strLocalAMPMInd, sizeof(strLocalAMPMInd), "%p", tick_time);} 
+		   
+		   if (clock_is_24h_style()){strftime(localtime_text, sizeof(localtime_text), "%H:%M", tick_time);}
+				else {strftime(localtime_text, sizeof(localtime_text), "%I:%M", tick_time);
+					 strftime(strLocalAMPMInd, sizeof(strLocalAMPMInd), "%p", tick_time);}
+	
+
+				//Remove the leading 0s
+				if (localtime_text[0]=='0') {memcpy(&localtime_text," ",1);}
+		   
+			//getTime();
+		//Set the Dual Time
+		getDualTime();
 
 
-			//Calculate the Dual Time
-			getTimeZones();
+       } //MINUTE CHANGES
+	   if (units_changed & DAY_UNIT){
+			//Update the date
+			getDate();}
+	
+} //HANDLE_TICK
 
-			//Check Battery Status
-			handle_battery(battery_state_service_peek());
+//*****************//
+// AppSync options //
+//*****************//
 
-			//Check BT Status
-			handle_bluetooth(bluetooth_connection_service_peek());
-
-	} //MINUTE CHANGES
-	     if (units_changed & DAY_UNIT){
-			 	//Update the date
-			 	getDate();}
-} //HANDLE_TICK 
-
-
-
-//****************************//
-// Initialize the application //
-//****************************//
-
-void handle_init(void)
+/* simple base 10 only itoa */
+char *
+itoa10 (int value, char *result)
 {
-	//Define Resources
-    ResHandle res_d;
-	ResHandle res_u;
-	ResHandle res_t;
-	ResHandle res_temp;
+    char const digit[] = "0123456789";
+    char *p = result;
+    if (value < 0) {
+        *p++ = '-';
+        value *= -1;
+    }
+
+    /* move number of required chars and null terminate */
+    int shift = value;
+    do {
+        ++p;
+        shift /= 10;
+    } while (shift);
+    *p = '\0';
+
+    /* populate result in reverse order */
+    do {
+        *--p = digit [value % 10];
+        value /= 10;
+    } while (value);
+
+    return result;
+}
+
+  static AppSync sync;
+  static uint8_t sync_buffer[512];
+
+  static void sync_tuple_changed_callback(const uint32_t key,
+                                        const Tuple* new_tuple,
+                                        const Tuple* old_tuple,
+                                        void* context) {
+
+        
+  // App Sync keeps new_tuple in sync_buffer, so we may use it directly
+  switch (key) {
+	  case LOCAL_NAME_KEY:
+	  		persist_write_string(LOCAL_NAME_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  case LOCAL_TZ_KEY:
+	      	//persist_write_int(LOCAL_TZ_KEY, new_tuple->value->uint16);
+	 		persist_write_int(LOCAL_TZ_KEY, new_tuple->value->uint32);
+	  
+	  		//debug
+	  		//static char strdebug[15];
+	  		//itoa10(new_tuple->value->uint32, strdebug);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, strdebug);
+	  		//debug - END
+	  
+      		break;
+	  case LOCAL_TZNAME_KEY:
+	  		persist_write_string(LOCAL_TZNAME_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  case DUAL_NAME_KEY:
+	  		persist_write_string(DUAL_NAME_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  case DUAL_TZ_KEY:
+	      	persist_write_int(DUAL_TZ_KEY, new_tuple->value->uint32);
+		  	//debug
+	  		//static char strdebug2[15];
+	  		//itoa10(new_tuple->value->uint32, strdebug2);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, strdebug2);
+	  		//debug - END
+      		break;
+	  case DUAL_TZNAME_KEY:
+	  		persist_write_string(DUAL_TZNAME_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  
+	  case LOCAL_TEMP_KEY:
+	  		persist_write_string(LOCAL_TEMP_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  case LOCAL_ICON_KEY:
+	  		persist_write_int(LOCAL_ICON_KEY, new_tuple->value->uint8);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring); 
+      		break;
+	  
+	  
+	  case DUAL_TEMP_KEY:
+	  		persist_write_string(DUAL_TEMP_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  
+	  case DUAL_ICON_KEY:
+	  		persist_write_int(DUAL_ICON_KEY, new_tuple->value->uint8);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring); 
+      		break;
+	  
+	  //Dual Timezone 2
+	  case DUAL_NAME2_KEY:
+	  		persist_write_string(DUAL_NAME2_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  
+	  case DUAL_TZ2_KEY:
+	      	persist_write_int(DUAL_TZ2_KEY, new_tuple->value->uint32);
+		  	break;
+	  
+	  case DUAL_TEMP2_KEY:
+	  		persist_write_string(DUAL_TEMP2_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  
+	  case DUAL_ICON2_KEY:
+	  		persist_write_int(DUAL_ICON2_KEY, new_tuple->value->uint8);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring); 
+      		break;
+	  
+	  //Dual Timezone 3
+	  case DUAL_NAME3_KEY:
+	  		persist_write_string(DUAL_NAME3_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  
+	  case DUAL_TZ3_KEY:
+	      	persist_write_int(DUAL_TZ3_KEY, new_tuple->value->uint32);
+		  	break;
+	  
+	  case DUAL_TEMP3_KEY:
+	  		persist_write_string(DUAL_TEMP3_KEY, new_tuple->value->cstring);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring);
+      		break;
+	  
+	  case DUAL_ICON3_KEY:
+	  		persist_write_int(DUAL_ICON3_KEY, new_tuple->value->uint8);
+	  		//APP_LOG(APP_LOG_LEVEL_DEBUG, new_tuple->value->cstring); 
+      		break;
+
+  }
+	  
+	  //refresh the screen
+	  
+		if (persist_exists(LOCAL_NAME_KEY)){persist_read_string(LOCAL_NAME_KEY, localname, sizeof(localname));}
+	  	if (persist_exists(DUAL_NAME_KEY)){persist_read_string(DUAL_NAME_KEY, dualname, sizeof(dualname));}
+	  	if (persist_exists(LOCAL_TZNAME_KEY)){persist_read_string(LOCAL_TZNAME_KEY, LocalTZName, sizeof(LocalTZName));}
+	  	if (persist_exists(DUAL_TZNAME_KEY)){persist_read_string(DUAL_TZNAME_KEY, DualTZName, sizeof(DualTZName));}
+	  	if (persist_exists(LOCAL_TEMP_KEY)){persist_read_string(LOCAL_TEMP_KEY, strLocalTemp, sizeof(strLocalTemp));}
+	  	if (persist_exists(DUAL_TEMP_KEY)){persist_read_string(DUAL_TEMP_KEY, strDualTemp, sizeof(strDualTemp));}
+	  	if (persist_exists(LOCAL_ICON_KEY)){
+			if (s_res_takeoff != NULL){gbitmap_destroy(s_res_takeoff);}
+			s_res_takeoff = gbitmap_create_with_resource(WEATHER_ICONS[persist_read_int(LOCAL_ICON_KEY)]);
+			bitmap_layer_set_bitmap(Local_img, s_res_takeoff);
+		}
+	  	if (persist_exists(DUAL_ICON_KEY)){
+			if (s_res_landing != NULL){gbitmap_destroy(s_res_landing);}
+			s_res_landing = gbitmap_create_with_resource(WEATHER_ICONS[persist_read_int(DUAL_ICON_KEY)]);
+			bitmap_layer_set_bitmap(Dual_img, s_res_landing);
+		}
+	 
+		//Dual Timezone 2
+	  if (persist_exists(DUAL_NAME2_KEY)){persist_read_string(DUAL_NAME2_KEY, dualname2, sizeof(dualname2));}
+	  if (persist_exists(DUAL_TEMP2_KEY)){persist_read_string(DUAL_TEMP2_KEY, strDualTemp2, sizeof(strDualTemp2));}
+	  if (persist_exists(DUAL_ICON2_KEY)){
+			if (s_res_landing2 != NULL){gbitmap_destroy(s_res_landing2);}
+			s_res_landing2 = gbitmap_create_with_resource(WEATHER_ICONS[persist_read_int(DUAL_ICON2_KEY)]);
+			bitmap_layer_set_bitmap(Dual_img2, s_res_landing2);
+		}
+	  
+	  //Dual Timezone 3
+	  if (persist_exists(DUAL_NAME3_KEY)){persist_read_string(DUAL_NAME3_KEY, dualname3, sizeof(dualname3));}
+	  if (persist_exists(DUAL_TEMP3_KEY)){persist_read_string(DUAL_TEMP3_KEY, strDualTemp3, sizeof(strDualTemp3));}
+	  if (persist_exists(DUAL_ICON3_KEY)){
+			if (s_res_landing3 != NULL){gbitmap_destroy(s_res_landing3);}
+			s_res_landing3 = gbitmap_create_with_resource(WEATHER_ICONS[persist_read_int(DUAL_ICON3_KEY)]);
+			bitmap_layer_set_bitmap(Dual_img3, s_res_landing3);
+		}	 
+	  	
+	  
+}
+
+//************************************************//
+// TIMER to refresh the weather data every 30 min //
+//************************************************//
+static void send_cmd(void) {
+
+         Tuplet value = MyTupletCString(2, LocalTZName);
+        
+         DictionaryIterator *iter;
+         app_message_outbox_begin(&iter);
+        
+         if (iter == NULL) {
+                return;
+         }
+        
+         dict_write_tuplet(iter, &value);
+         dict_write_end(iter);
+        
+         app_message_outbox_send();
 	
+}
+
+static void timer_callback(void *context) {
+
+		//Developer vibe: confirm that timer is not killed
+		//vibes_double_pulse();
 	
-	// read saved settings
-	intLanguage=persist_read_int(Language_KEY);
-	intLocalTime=persist_read_int(LocalTime_KEY);
-	persist_read_string(TZ1Name_KEY, tz1_name, sizeof(tz1_name));
-	intTZ1=persist_read_int(TZ1Time_KEY);
-	persist_read_string(TZ2Name_KEY, tz2_name, sizeof(tz2_name));
-	intTZ2=persist_read_int(TZ2Time_KEY);
-	persist_read_string(TZ3Name_KEY, tz3_name, sizeof(tz3_name));
-	intTZ3=persist_read_int(TZ3Time_KEY);
-	color_inverted = persist_read_bool(INVERT_COLOR_KEY);
+        timer = app_timer_register(timeout_ms, timer_callback, NULL);
 
-	//Create the main window
-	my_window = window_create(); 
-	window_stack_push(my_window, true /* Animated */);
-	window_set_background_color(my_window, GColorBlack);
+        //Refresh the weather
+        send_cmd();
+	       
 
+}
 
-	//Load the custom fonts
-	res_t = resource_get_handle(RESOURCE_ID_FUTURA_CONDENSED_53); // Time font
-	res_d = resource_get_handle(RESOURCE_ID_FUTURA_17); // Date font
-	res_u = resource_get_handle(RESOURCE_ID_FUTURA_14); // Last Update font
-	//res_temp =  resource_get_handle(RESOURCE_ID_FUTURA_36); //Temperature
-
-
-    font_date = fonts_load_custom_font(res_d);
-	font_update = fonts_load_custom_font(res_u);
-	font_time = fonts_load_custom_font(res_t);
-
-
-	//LOAD THE LAYERS
-		//Display the Weekday layer
-		Weekday_Layer = text_layer_create(WEEKDAY_FRAME);
-		text_layer_set_text_color(Weekday_Layer, GColorWhite);
-		text_layer_set_background_color(Weekday_Layer, GColorClear);
-		text_layer_set_font(Weekday_Layer, font_date);
-		text_layer_set_text_alignment(Weekday_Layer, GTextAlignmentLeft);
-		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(Weekday_Layer)); 
-
-		//Display the Batt layer
-		Batt_icon_layer = bitmap_layer_create(BATT_FRAME);
-  		bitmap_layer_set_bitmap(Batt_icon_layer, Batt_image);
-  		layer_add_child(window_get_root_layer(my_window), bitmap_layer_get_layer(Batt_icon_layer));
-
-		//Display the BT layer
-	  	BT_icon_layer = bitmap_layer_create(BT_FRAME);
-  		bitmap_layer_set_bitmap(BT_icon_layer, BT_image);
-  		layer_add_child(window_get_root_layer(my_window), bitmap_layer_get_layer(BT_icon_layer));
-
-		//Display the Time layer
-		Time_Layer = text_layer_create(TIME_FRAME);
-		text_layer_set_text_color(Time_Layer, GColorWhite);
-		text_layer_set_background_color(Time_Layer, GColorClear);
-		text_layer_set_font(Time_Layer, font_time);
-		text_layer_set_text_alignment(Time_Layer, GTextAlignmentCenter);
-		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(Time_Layer)); 
-
-		//Display the Date layer
-		date_layer = text_layer_create(DATE_FRAME);
-		text_layer_set_text_color(date_layer, GColorWhite);
-		text_layer_set_background_color(date_layer, GColorClear);
-		text_layer_set_font(date_layer, font_date);
-		text_layer_set_text_alignment(date_layer, GTextAlignmentRight);
-		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(date_layer)); 
-
-		//Display the Work Clock 1 layer
-		WC1NAME_Layer = text_layer_create(WC1NAME_FRAME);
-		WC1TIME_Layer = text_layer_create(WC1TIME_FRAME);
-		text_layer_set_text_color(WC1NAME_Layer, GColorWhite);
-		text_layer_set_text_color(WC1TIME_Layer, GColorWhite);
-		text_layer_set_background_color(WC1NAME_Layer, GColorClear);
-		text_layer_set_background_color(WC1TIME_Layer, GColorClear);
-		text_layer_set_font(WC1NAME_Layer, font_update);
-		text_layer_set_font(WC1TIME_Layer, font_update);
-		text_layer_set_text_alignment(WC1NAME_Layer, GTextAlignmentLeft);
-		text_layer_set_text_alignment(WC1TIME_Layer, GTextAlignmentRight);
-		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(WC1NAME_Layer)); 
-		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(WC1TIME_Layer)); 
-
-		//Display the Work Clock 2 layer
-		WC2NAME_Layer = text_layer_create(WC2NAME_FRAME);
-		WC2TIME_Layer = text_layer_create(WC2TIME_FRAME);
-		text_layer_set_text_color(WC2NAME_Layer, GColorWhite);
-		text_layer_set_text_color(WC2TIME_Layer, GColorWhite);
-		text_layer_set_background_color(WC2NAME_Layer, GColorClear);
-		text_layer_set_background_color(WC2TIME_Layer, GColorClear);
-		text_layer_set_font(WC2NAME_Layer, font_update);
-		text_layer_set_font(WC2TIME_Layer, font_update);
-		text_layer_set_text_alignment(WC2NAME_Layer, GTextAlignmentLeft);
-		text_layer_set_text_alignment(WC2TIME_Layer, GTextAlignmentRight);
-		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(WC2NAME_Layer)); 
-		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(WC2TIME_Layer)); 
-
-		//Display the Work Clock 3 layer
-		WC3NAME_Layer = text_layer_create(WC3NAME_FRAME);
-		WC3TIME_Layer = text_layer_create(WC3TIME_FRAME);
-		text_layer_set_text_color(WC3NAME_Layer, GColorWhite);
-		text_layer_set_text_color(WC3TIME_Layer, GColorWhite);
-		text_layer_set_background_color(WC3NAME_Layer, GColorClear);
-		text_layer_set_background_color(WC3TIME_Layer, GColorClear);
-		text_layer_set_font(WC3NAME_Layer, font_update);
-		text_layer_set_font(WC3TIME_Layer, font_update);
-		text_layer_set_text_alignment(WC3NAME_Layer, GTextAlignmentLeft);
-		text_layer_set_text_alignment(WC3TIME_Layer, GTextAlignmentRight);
-		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(WC3NAME_Layer)); 
-		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(WC3TIME_Layer)); 
-
-
-		//Drawn the normal/inverted based on saved settings
-	    InvertColors(color_inverted);
-
-	// Ensures time is displayed immediately (will break if NULL tick event accessed).
-	  // (This is why it's a good idea to have a separate routine to do the update itself.)
-
-		time_t now = time(NULL);
-	  	struct tm *current_time = localtime(&now);
-		handle_tick(current_time, MINUTE_UNIT);
-		tick_timer_service_subscribe(MINUTE_UNIT, &handle_tick);
-
-		//Enable the Battery check event
-		battery_state_service_subscribe(&handle_battery);
-		//Enable the Bluetooth check event
-	 	bluetooth_connection_service_subscribe(&handle_bluetooth);
-	
-	// Setup messaging
-		const int inbound_size = 128;
-		const int outbound_size = 128;
-		
-		app_message_open(inbound_size, outbound_size);
-	
-	
-	Tuplet initial_values[] = {
-		TupletInteger(Language_KEY, intLanguage), 
-		TupletInteger(LocalTime_KEY, intLocalTime), 
-		MyTupletCString(TZ1Name_KEY,tz1_name),
-		TupletInteger(TZ1Time_KEY, intTZ1),
-		MyTupletCString(TZ2Name_KEY,tz2_name),
-		TupletInteger(TZ2Time_KEY, intTZ2),
-		MyTupletCString(TZ3Name_KEY,tz3_name),
-		TupletInteger(TZ3Time_KEY, intTZ3),
-		TupletInteger(INVERT_COLOR_KEY, color_inverted),
-	}; //TUPLET INITIAL VALUES
-	
-	
-	
-	app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values,
-				  ARRAY_LENGTH(initial_values), sync_tuple_changed_callback,
-				  NULL, NULL);
-
-} //HANDLE_INIT
-
-
-
-//**********************//
-// Kill the application //
-//**********************//
-void handle_deinit(void)
-{
-  //text_layer_destroy(text_layer);
-
-	//Unsuscribe services
-	tick_timer_service_unsubscribe();
- 	battery_state_service_unsubscribe();
-  	bluetooth_connection_service_unsubscribe();
-
-	//if (BT_image) {gbitmap_destroy(BT_image);}
-	//if (Batt_image){gbitmap_destroy(Batt_image);}
-
-	//Deallocate layers
-	text_layer_destroy(Time_Layer);
-	text_layer_destroy(date_layer);
-	text_layer_destroy(Weekday_Layer);
-
-	//Deallocate custom fonts
-	fonts_unload_custom_font(font_date);
-	fonts_unload_custom_font(font_update);
-	fonts_unload_custom_font(font_time);
-
-	//Deallocate the main window
-  	window_destroy(my_window);
-
-} //HANDLE_DEINIT
 
 
 //*************//
 // ENTRY POINT //
 //*************//
-int main(void) 
-{	
-	handle_init();
-	app_event_loop();
-	handle_deinit();
+void SetupMessages(){
+
+	
+                app_message_open(inbound_size, outbound_size);
+        
+                Tuplet initial_values[] = {
+					MyTupletCString(LOCAL_NAME_KEY, localname),
+					TupletInteger(LOCAL_TZ_KEY, persist_read_int(LOCAL_TZ_KEY)), 
+					MyTupletCString(LOCAL_TZNAME_KEY, LocalTZName),
+					MyTupletCString(DUAL_NAME_KEY, dualname),
+					TupletInteger(DUAL_TZ_KEY, persist_read_int(DUAL_TZ_KEY)),
+					MyTupletCString(DUAL_TZNAME_KEY, DualTZName),
+					MyTupletCString(LOCAL_TEMP_KEY, strLocalTemp),
+					MyTupletCString(DUAL_TEMP_KEY, strDualTemp),
+					TupletInteger(LOCAL_ICON_KEY, persist_read_int(LOCAL_ICON_KEY)), 
+					TupletInteger(DUAL_ICON_KEY, persist_read_int(DUAL_ICON_KEY)), 
+					//Dual Timezone 2
+					MyTupletCString(DUAL_NAME2_KEY, dualname2),
+					TupletInteger(DUAL_TZ2_KEY, 0),
+					MyTupletCString(DUAL_TEMP2_KEY, ""),
+					TupletInteger(DUAL_ICON2_KEY, 0), 
+					//Dual Timezone 3
+					MyTupletCString(DUAL_NAME3_KEY, dualname3),
+					TupletInteger(DUAL_TZ3_KEY, 0),
+					MyTupletCString(DUAL_TEMP3_KEY, ""),
+					TupletInteger(DUAL_ICON3_KEY, 0), 
+					
+                }; //TUPLET INITIAL VALUES
+        
+                app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values,
+                ARRAY_LENGTH(initial_values), sync_tuple_changed_callback,
+                NULL, NULL);
 }
+
+
+void handle_init(void)
+{
+	
+	//Use the internationalization API to detect the user's language
+	setlocale(LC_ALL, i18n_get_system_locale());
+	
+	//Read the persistent storage
+	if (persist_exists(LOCAL_NAME_KEY)){persist_read_string(LOCAL_NAME_KEY, localname, sizeof(localname));}
+	if (persist_exists(DUAL_NAME_KEY)){persist_read_string(DUAL_NAME_KEY, dualname, sizeof(dualname));}
+	if (persist_exists(LOCAL_TZNAME_KEY)){persist_read_string(LOCAL_TZNAME_KEY, LocalTZName, sizeof(LocalTZName));}
+	if (persist_exists(DUAL_TZNAME_KEY)){persist_read_string(DUAL_TZNAME_KEY, DualTZName, sizeof(DualTZName));}
+	if (persist_exists(LOCAL_TEMP_KEY)){persist_read_string(LOCAL_TEMP_KEY, strLocalTemp, sizeof(strLocalTemp));}
+	if (persist_exists(DUAL_TEMP_KEY)){persist_read_string(DUAL_TEMP_KEY, strDualTemp, sizeof(strDualTemp));}
+	
+	if (persist_exists(LOCAL_ICON_KEY)){s_res_takeoff = gbitmap_create_with_resource(WEATHER_ICONS[persist_read_int(LOCAL_ICON_KEY)]);}
+	else{s_res_takeoff = gbitmap_create_with_resource(RESOURCE_ID_TakeOff);}
+	
+	if (persist_exists(DUAL_ICON_KEY)){s_res_landing = gbitmap_create_with_resource(WEATHER_ICONS[persist_read_int(DUAL_ICON_KEY)]);}
+	else{s_res_landing = gbitmap_create_with_resource(RESOURCE_ID_Landing);}
+	
+	//Dual Timezone 2
+	if (persist_exists(DUAL_NAME2_KEY)){persist_read_string(DUAL_NAME2_KEY, dualname2, sizeof(dualname2));}
+	if (persist_exists(DUAL_TEMP2_KEY)){persist_read_string(DUAL_TEMP2_KEY, strDualTemp2, sizeof(strDualTemp2));}
+	if (persist_exists(DUAL_ICON2_KEY)){s_res_landing2 = gbitmap_create_with_resource(WEATHER_ICONS[persist_read_int(DUAL_ICON2_KEY)]);}
+	else{s_res_landing2 = gbitmap_create_with_resource(RESOURCE_ID_Landing);}
+	
+	//Dual Timezone 3
+	if (persist_exists(DUAL_NAME3_KEY)){persist_read_string(DUAL_NAME3_KEY, dualname3, sizeof(dualname3));}
+	if (persist_exists(DUAL_TEMP3_KEY)){persist_read_string(DUAL_TEMP3_KEY, strDualTemp3, sizeof(strDualTemp3));}
+	if (persist_exists(DUAL_ICON3_KEY)){s_res_landing3 = gbitmap_create_with_resource(WEATHER_ICONS[persist_read_int(DUAL_ICON3_KEY)]);}
+	else{s_res_landing3 = gbitmap_create_with_resource(RESOURCE_ID_Landing);}
+	
+	//Display the UI
+	show_main();
+	
+	//Init the AppSync with the js code
+	SetupMessages();
+	
+	//Setup the date & time
+	getDate();
+	//getTime();
+	
+	//subscribe to the tick event
+	time_t now = time(NULL);
+	struct tm *current_time = localtime(&now);
+
+	handle_tick(current_time, MINUTE_UNIT);
+	tick_timer_service_subscribe(MINUTE_UNIT, &handle_tick);
+	
+	//setup the timer to refresh the weather info every 30min
+	timer = app_timer_register(timeout_ms, timer_callback, NULL);
+}
+
+void handle_deinit(void)
+{
+	hide_main();
+}
+
+
+int main(void)
+{        
+        handle_init();
+        app_event_loop();
+        handle_deinit();
+}
+

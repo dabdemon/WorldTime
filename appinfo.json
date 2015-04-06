@@ -1,60 +1,140 @@
 {
-    "versionLabel": "1.2",
+    "appKeys": {
+        "dualicon": 9,
+        "dualicon2": 13,
+        "dualicon3": 17,
+        "dualname": 3,
+        "dualname2": 10,
+        "dualname3": 14,
+        "dualtemp": 8,
+        "dualtemp2": 12,
+        "dualtemp3": 16,
+        "dualtz": 4,
+        "dualtz2": 11,
+        "dualtz3": 15,
+        "dualtzname": 5,
+        "localicon": 7,
+        "localname": 0,
+        "localtemp": 6,
+        "localtz": 1,
+        "localtzname": 2
+    },
     "capabilities": [
         "configurable"
     ],
-    "shortName": "World Time",
+    "companyName": "dabdemon",
     "longName": "World Time",
-    "versionCode": 2,
-    "uuid": "4e2ae2a7-ad7e-4955-a228-13ec4179dd35",
+    "projectType": "native",
     "resources": {
         "media": [
             {
-                "type": "png",
-                "file": "images/bluetooth_white_small2.png",
-                "name": "BT_CONNECTED"
+                "file": "images/takeoff.png",
+                "name": "TakeOff",
+                "type": "png"
             },
             {
-                "type": "png",
-                "file": "images/batt_char.png",
-                "name": "BATT_CHAR"
+                "file": "images/landing.png",
+                "name": "Landing",
+                "type": "png"
             },
             {
-                "type": "png",
-                "file": "images/batt_empty.png",
-                "name": "BATT_EMPTY"
+                "file": "images/clear-night_small.png",
+                "name": "ICON_CLEAR_NIGHT",
+                "type": "png"
             },
             {
-                "type": "font",
-                "file": "fonts/futura.ttf",
-                "name": "FUTURA_17"
+                "file": "images/clear-day_small.png",
+                "name": "ICON_CLEAR_DAY",
+                "type": "png"
             },
             {
-                "type": "font",
-                "file": "fonts/futura.ttf",
-                "name": "FUTURA_14"
+                "file": "images/ICON_CLOUDY_SMALL.png",
+                "name": "ICON_CLOUDY",
+                "type": "png"
             },
             {
-                "type": "font",
-                "file": "fonts/futura_condensed_bold-webfont.ttf",
-                "characterRegex": "[0-9:]",
-                "name": "FUTURA_CONDENSED_53"
+                "file": "images/ICON_COLD_SMALL.png",
+                "name": "ICON_COLD",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_DRIZZLE_SMALL.png",
+                "name": "ICON_DRIZZLE",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_FOG_SMALL.png",
+                "name": "ICON_FOG",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_HOT_SMALL.png",
+                "name": "ICON_HOT",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_NOT_AVAILABLE_SMALL.png",
+                "name": "ICON_NA",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_PARTLY_CLOUDY_DAY.png",
+                "name": "ICON_PARTLY_CLOUDY_DAY",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_PARTLY_CLOUDY_NIGHT_SMALL.png",
+                "name": "ICON_PARTLY_CLOUDY_NIGHT",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_RAIN_SLEET_SMALL.png",
+                "name": "ICON_RAIN_SLEET",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_RAIN_SMALL.png",
+                "name": "ICON_RAIN",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_RAIN_SNOW_SMALL.png",
+                "name": "ICON_RAIN_SNOW",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_SLEET_SMALL.png",
+                "name": "ICON_SLEET",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_SNOW_SMALL.png",
+                "name": "ICON_SNOW",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_SNOW_SLEET_SMALL.png",
+                "name": "ICON_SNOW_SLEET",
+                "type": "png"
+            },
+            {
+                "file": "images/ICON_THUNDER_SMALL.png",
+                "name": "ICON_THUNDER",
+                "type": "png"
+            },
+            {
+                "file": "images/wind_small.png",
+                "name": "ICON_WIND",
+                "type": "png"
             }
         ]
     },
+    "sdkVersion": "2",
+    "shortName": "World Time",
+    "uuid": "4e2ae2a7-ad7e-4955-a228-13ec4179dd35",
+    "versionCode": 1,
+    "versionLabel": "2.0",
     "watchapp": {
         "watchface": true
-    },
-    "appKeys": {
-        "invert_color": 8,
-        "TZ3Time": 7,
-        "TZ2Time": 5,
-        "language": 0,
-        "TZ2Name": 4,
-        "TZ3Name": 6,
-        "TZ1Time": 3,
-        "LocalTime": 1,
-        "TZ1Name": 2
-    },
-    "companyName": "dabdemon"
+    }
 }
