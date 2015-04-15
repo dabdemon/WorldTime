@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>World Time FAQ</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="./css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>                        
+          </button>
+          <a class="navbar-brand" href="#">World Time</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li><a href="./development.html">Settings</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  
+    <div class = "container">
+      <div class="jumbotron">
+        <h2>Please read the Frequently Asked Question below</h2>
+        <h4>If none of the FAQ below helped you, don't hesitate on contacting dev support.</h4>
+      </div>
+    </div>
+
+
+    <div class = "container">
+      <div class="row">
+        <div class="col-md-4" align="center">
+          <h4 class="text-success">Watiting for your User Key?</h4>
+          If you are waiting for your user key means that you are a World Time backer. THANK YOU!
+          <br>
+          <br>
+          The user key is sent to your email  linked to your PayPal account. Please ensure that email is still active and if not, contact me so I can resend your key to the email address you prefer (please include the email address related to your PayPal account in the message so I easily identify you).
+          <br>
+          <br>
+          If after 48h you don't get your user key something really weird is happening. Please check your spam folder and ensure your user key is not incorrectly tagged as spam (you will get an email from pebbleweather@gmail.com).
+          <br>
+          <br>
+          You can also contact me for getting more details about the status of your key, but please check your spam folder first.
+        </div>
+
+        <div class = "col-md-4" align="center">
+          <h4 class="text-success">Facing issues to make your settings work?</h4>
+          Some users are facing difficulties when initially setting up World Time. Usually this is because the geolocation API is not able to locate you, because you are inside a building and you have low GPS signal, or in some rare scenarios because the API itself is running slow and doesn't retrieve the data on a timely manner.
+          <br>
+          <br>
+          Usually this is fixed by following these simple steps:
+
+          <div align="left">
+            <br>
+            <br>
+
+                1. From the Settings, set the "use GPS" option to NO
+            <br>
+                2. Manually enter your Local City name.
+            <br>
+                3 Configure all the rest of the settings at your convenience
+            <br>
+                4 Submit.
+          </div>
+          <br>
+          <br>
+          After submitting, the watchface should recognize all your settings and work properly. In most of the cases you should be able to set the "use GPS" back to YES and refresh the data based on you current location (but if you don't travel too much, your phone's battery will appreciate you keep the manual location) but if that still don't work to you, that may be because your Pebble app cannot access to your location services. If so, please ensure your GPS is turned on and Pebble app has access to access it.
+          <br>
+          <br>
+          Also, some Android users are unintentionally blocking the access to the location services due some "Power Management" options some manufacturers are adding to their custom roms. This also happens to some Cyanogen users, which have something called "Black List". Please, ensure everything is properly configured to allow World Time access your GPS data.
+          <br>
+          <br>
+          If after following those steps you are still unable to make it work properly, contact me and I will help you.
+        </div>
+
+        <div class="col-md-4" align="center">
+          <h4 class="text-success">"XXXXXXXXXXXX" is displayed on screen</h4>
+          Once you install World Time on your Pebble you'll need to configure it to work.
+          <br>
+          The watchface is refreshing everytime the minute changes, so you cannot expect a real-time refresh after you change your settings. Please patiently wait until the screen refreshes to get your changes displayed.
+          <br>
+          If after a minute you are still getting "XXXXXXXXXXX" instead of your city name please confirm that you didn't enter any typo in the city name. Additionally you may want to check the first entry on this FAQ to ensure World Time is properly getting your settings.
+          <br>
+          As World Time is completely redesigned some users of previous version could find hard to make the new World Time to work. This is because of the old settings saved on your watch. Please factory reset your watch to clean this out and start a fresh World Time experice.
+        </div>
+      </div>
+
+      <br>  
+
+
+    </div>
+
+</body>
+</html>
