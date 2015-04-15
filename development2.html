@@ -9,6 +9,8 @@
 		  <link rel="stylesheet" href="./css/bootstrap.min.css">
 		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+		  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
 	</head>
 	<body>
@@ -94,7 +96,7 @@
 
               
 				<div data-role="fieldcontain">
-                	<legend>Timezones:</legend>
+                	<legend>Timezones</legend>
 
 				    <div class="form-group">
 				      <label for="localpos" class="col-lg-2 control-label">Local City</label>
@@ -128,7 +130,7 @@
 
                 <div data-role="fieldcontain">
                     <fieldset data-role="controlgroup" data-type="horizontal">
-                        <legend>Weather:</legend>
+                        <legend>Weather</legend>
 
                     <div data-role="content">
                         <label for="lt"></label>
@@ -179,32 +181,118 @@
             </div>
 		</form>
 
-		<script type="text/javascript">
-   			$(document).ready(function () {
-       			$('#localpos').change(function () { getCity($('#localpos').val()); });
-       			$('#dualpos').change(function () { getCity($('#dualpos').val()); });
-       			$('#dualpos2').change(function () { getCity($('#dualpos2').val()); });
-       			$('#dualpos3').change(function () { getCity($('#dualpos3').val()); });
-   			});
 
-   			function getCity(city_name){
-					var query = "http://maps.googleapis.com/maps/api/geocode/json?address="+city_name+"&sensor=true"
-					var req;
-					
-					 $.getJSON( query, {
-					    format: "json"
-					  })
-					    .done(function( json ) {
-					    	if (json.status == "OK"){
-													     var city1 = json.results[0].formatted_address;
-													     alert(city1);
-													 }
-							else {alert("City not found");}
-					     //alert("guay");
-					      });
-					    
-				}
+
+		<script type="text/javascript">
+		//Autocomplete the City names
+
+				jQuery(function () 
+				 {
+					 jQuery("#localpos").autocomplete({
+						source: function (request, response) {
+						 jQuery.getJSON(
+							"http://gd.geobytes.com/AutoCompleteCity?callback=?&q="+request.term,
+							function (data) {
+							 response(data);
+							}
+						 );
+						},
+						minLength: 3,
+						select: function (event, ui) {
+						 var selectedObj = ui.item;
+						 jQuery("#localpos").val(selectedObj.value);
+						getcitydetails(selectedObj.value);
+						 return false;
+						},
+						open: function () {
+						 jQuery(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+						},
+						close: function () {
+						 jQuery(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+						}
+					 });
+
+
+
+					 jQuery("#dualpos").autocomplete({
+						source: function (request, response) {
+						 jQuery.getJSON(
+							"http://gd.geobytes.com/AutoCompleteCity?callback=?&q="+request.term,
+							function (data) {
+							 response(data);
+							}
+						 );
+						},
+						minLength: 3,
+						select: function (event, ui) {
+						 var selectedObj = ui.item;
+						 jQuery("#dualpos").val(selectedObj.value);
+						getcitydetails(selectedObj.value);
+						 return false;
+						},
+						open: function () {
+						 jQuery(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+						},
+						close: function () {
+						 jQuery(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+						}
+					 });
+
+
+		 			jQuery("#dualpos2").autocomplete({
+						source: function (request, response) {
+						 jQuery.getJSON(
+							"http://gd.geobytes.com/AutoCompleteCity?callback=?&q="+request.term,
+							function (data) {
+							 response(data);
+							}
+						 );
+						},
+						minLength: 3,
+						select: function (event, ui) {
+						 var selectedObj = ui.item;
+						 jQuery("#dualpos2").val(selectedObj.value);
+						getcitydetails(selectedObj.value);
+						 return false;
+						},
+						open: function () {
+						 jQuery(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+						},
+						close: function () {
+						 jQuery(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+						}
+					 });
+
+
+		 			 jQuery("#dualpos3").autocomplete({
+						source: function (request, response) {
+						 jQuery.getJSON(
+							"http://gd.geobytes.com/AutoCompleteCity?callback=?&q="+request.term,
+							function (data) {
+							 response(data);
+							}
+						 );
+						},
+						minLength: 3,
+						select: function (event, ui) {
+						 var selectedObj = ui.item;
+						 jQuery("#dualpos3").val(selectedObj.value);
+						getcitydetails(selectedObj.value);
+						 return false;
+						},
+						open: function () {
+						 jQuery(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+						},
+						close: function () {
+						 jQuery(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+						}
+					 });
+
+			});
+				
 		</script>
+
+
 
 <!-- CODE-->
 		<script>
