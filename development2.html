@@ -11,9 +11,10 @@
 		  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 		  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
 		  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
 
 	</head>
-	<body>
+	<body onload="initialize()">
 	
 
 		<nav class="navbar navbar-default">
@@ -101,7 +102,7 @@
 				    <div class="form-group">
 				      <label for="localpos" class="col-lg-2 control-label">Local City</label>
 				      <div class="col-lg-10">
-				        <input type="text" class="form-control" id="localpos" placeholder="i.e. Madrid">
+				        <input class="form-control" id="localpos" placeholder="i.e. Madrid" type="text"></input>
 				      </div>
 				    </div>
 
@@ -180,123 +181,47 @@
                 </fieldset>
             </div>
 		</form>
-
-
-
 		<script type="text/javascript">
-		//Autocomplete the City names
 
-				jQuery(function () 
-				 {
-					 jQuery("#localpos").autocomplete({
-						source: function (request, response) {
-						 jQuery.getJSON(
-							"http://gd.geobytes.com/AutoCompleteCity?callback=?&q="+request.term,
-							function (data) {
-							 response(data);
-							}
-						 );
-						},
-						minLength: 3,
-						select: function (event, ui) {
-						 var selectedObj = ui.item;
-						 jQuery("#localpos").val(selectedObj.value);
-						getcitydetails(selectedObj.value);
-						 return false;
-						},
-						open: function () {
-						 jQuery(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-						},
-						close: function () {
-						 jQuery(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-						}
-					 });
+		//Google Search API
+		
+		function initialize() {
+		  // Create the autocomplete object, restricting the search
+		  // to geographical location types.
+		  localpos = new google.maps.places.Autocomplete(
+		      /** @type {HTMLInputElement} */(document.getElementById('localpos')),
+		      { types: ['geocode'] });
 
 
 
-					 jQuery("#dualpos").autocomplete({
-						source: function (request, response) {
-						 jQuery.getJSON(
-							"http://gd.geobytes.com/AutoCompleteCity?callback=?&q="+request.term,
-							function (data) {
-							 response(data);
-							}
-						 );
-						},
-						minLength: 3,
-						select: function (event, ui) {
-						 var selectedObj = ui.item;
-						 jQuery("#dualpos").val(selectedObj.value);
-						getcitydetails(selectedObj.value);
-						 return false;
-						},
-						open: function () {
-						 jQuery(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-						},
-						close: function () {
-						 jQuery(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-						}
-					 });
+		  // Create the autocomplete object, restricting the search
+		  // to geographical location types.
+		  dualpos = new google.maps.places.Autocomplete(
+		      /** @type {HTMLInputElement} */(document.getElementById('dualpos')),
+		      { types: ['geocode'] });
 
 
-		 			jQuery("#dualpos2").autocomplete({
-						source: function (request, response) {
-						 jQuery.getJSON(
-							"http://gd.geobytes.com/AutoCompleteCity?callback=?&q="+request.term,
-							function (data) {
-							 response(data);
-							}
-						 );
-						},
-						minLength: 3,
-						select: function (event, ui) {
-						 var selectedObj = ui.item;
-						 jQuery("#dualpos2").val(selectedObj.value);
-						getcitydetails(selectedObj.value);
-						 return false;
-						},
-						open: function () {
-						 jQuery(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-						},
-						close: function () {
-						 jQuery(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-						}
-					 });
+
+		  		  // Create the autocomplete object, restricting the search
+		  // to geographical location types.
+		  dualpos2 = new google.maps.places.Autocomplete(
+		      /** @type {HTMLInputElement} */(document.getElementById('dualpos2')),
+		      { types: ['geocode'] });
 
 
-		 			 jQuery("#dualpos3").autocomplete({
-						source: function (request, response) {
-						 jQuery.getJSON(
-							"http://gd.geobytes.com/AutoCompleteCity?callback=?&q="+request.term,
-							function (data) {
-							 response(data);
-							}
-						 );
-						},
-						minLength: 3,
-						select: function (event, ui) {
-						 var selectedObj = ui.item;
-						 jQuery("#dualpos3").val(selectedObj.value);
-						getcitydetails(selectedObj.value);
-						 return false;
-						},
-						open: function () {
-						 jQuery(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-						},
-						close: function () {
-						 jQuery(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-						}
-					 });
+		  		  // Create the autocomplete object, restricting the search
+		  // to geographical location types.
+		  dualpos3 = new google.maps.places.Autocomplete(
+		      /** @type {HTMLInputElement} */(document.getElementById('dualpos3')),
+		      { types: ['geocode'] });
 
-			});
-				
+		}			
 		</script>
 
 
 
 <!-- CODE-->
 		<script>
-
             
                 function getQueryVariable(variable) {
                     var query = location.search.substring(1);
@@ -369,11 +294,14 @@
                         $('#localpos').prop('disabled', $('#gps_switch').val() == "true");
                     });
                 });
-
-
 			
         </script>
 
 
 	</body>
 </html>
+
+    Status API Training Shop Blog About Help 
+
+    © 2015 GitHub, Inc. Terms Privacy Security Contact 
+
