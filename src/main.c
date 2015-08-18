@@ -50,21 +50,21 @@ static const uint32_t WEATHER_ICONS[] = {
 	
 //Variables
 	static char localtime_text[] = "00:00";
-	static char localweekday_text[] = "XXXXXXXXXXXX";
-	static char localmonth_text[] = "XXXXXXXXXXXXX";
-	static char localdate_text[] = "XXXXXXXXXXXXXXXXXXXXXXXXX";
+	static char localweekday_text[] = "            ";
+	static char localmonth_text[] = "             ";
+	static char localdate_text[] = "Please go to settings page";
 
 	static char dualtime_text[] = "00:00";
-	static char dualweekday_text[] = "XXXXXXXXXXXX";
-	static char dualmonth_text[] = "XXXXXXXXXXXXX";
+	static char dualweekday_text[] = "            ";
+	static char dualmonth_text[] = "             ";
 
 	static char dualtime2_text[] = "00:00";
-	static char dualweekday2_text[] = "XXXXXXXXXXXX";
-	static char dualmonth2_text[] = "XXXXXXXXXXXXX";
+	static char dualweekday2_text[] = "            ";
+	static char dualmonth2_text[] = "             ";
 
 	static char dualtime3_text[] = "00:00";
-	static char dualweekday3_text[] = "XXXXXXXXXXXX";
-	static char dualmonth3_text[] = "XXXXXXXXXXXXX";
+	static char dualweekday3_text[] = "            ";
+	static char dualmonth3_text[] = "             ";
 
 	int localtz=0;
 	int dualtz=0;
@@ -74,10 +74,10 @@ static const uint32_t WEATHER_ICONS[] = {
 	int timediff2=0; //dualtz2-localtz
 	int timediff3=0; //dualtz3-localtz
 
-	char localname[] = "XXXXXXXXXXXXXXX";
-	char dualname[] = "XXXXXXXXXXXXXXX";
-	char dualname2[] = "XXXXXXXXXXXXXXX";
-	char dualname3[] = "XXXXXXXXXXXXXXX";
+	char localname[] = "LOCATION NOT   ";
+	char dualname[] = "SET YET.       ";
+	char dualname2[] = "PLEASE GO TO   ";
+	char dualname3[] = "SETTINGS PAGE  ";
 
 	char LocalTZName[]  = "     ";
 	char DualTZName[]  = "     ";
@@ -98,7 +98,11 @@ static const uint32_t WEATHER_ICONS[] = {
 	const int outbound_size = 512;
 	
 // BEGIN AUTO-GENERATED UI CODE; DO NOT MODIFY
-InverterLayer *inv_layer;
+	//Define the text color based on the Pebble model
+	#ifdef PBL_PLATFORM_APLITE
+	  	InverterLayer *inv_layer;
+	#endif
+
 static Window *s_window;
 static GFont s_res_gothic_14;
 static GFont s_res_bitham_42_light;
@@ -150,8 +154,12 @@ static BitmapLayer *Dual_img3;
 
 static void initialise_ui(void) {
   s_window = window_create();
-  window_set_background_color(s_window, GColorBlack);
-  window_set_fullscreen(s_window, true);
+  
+	
+ 	#ifdef PBL_PLATFORM_APLITE
+	  	window_set_fullscreen(s_window, true);
+	#endif	
+  
   
   s_res_gothic_14 = fonts_get_system_font(FONT_KEY_GOTHIC_14);
   s_res_bitham_42_light = fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
@@ -183,6 +191,7 @@ static void initialise_ui(void) {
 //TIME
   LocalTime = text_layer_create(GRect(45, 23, 93, 42));
   text_layer_set_background_color(LocalTime, GColorClear);
+	
   text_layer_set_text(LocalTime, localtime_text);
   text_layer_set_text_alignment(LocalTime, GTextAlignmentRight);
   text_layer_set_font(LocalTime, s_res_bitham_30_black);
@@ -196,7 +205,7 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)Local_img);
 
 //TEMPERATURE
-  LocalTemp = text_layer_create(GRect(4, 30, 30, 30)); //(GRect(73, 15, 65, 42));
+  LocalTemp = text_layer_create(GRect(4, 30, 35, 35)); //(GRect(73, 15, 65, 42));
   text_layer_set_background_color(LocalTemp, GColorClear);
   text_layer_set_text(LocalTemp, strLocalTemp);
   text_layer_set_text_alignment(LocalTemp, GTextAlignmentRight);
@@ -251,7 +260,7 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)Dual_img);
 	
   //TEMPERATURE
-  DualTemp = text_layer_create(GRect(4, 73, 20, 20));
+  DualTemp = text_layer_create(GRect(4, 73, 21, 21));
   text_layer_set_background_color(DualTemp, GColorClear);
   text_layer_set_text(DualTemp, strDualTemp);
   text_layer_set_text_alignment(DualTemp, GTextAlignmentRight);
@@ -303,7 +312,7 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)Dual_img2);
 	
   //TEMPERATURE
-  DualTemp2 = text_layer_create(GRect(4, 110, 20, 20));
+  DualTemp2 = text_layer_create(GRect(4, 110, 21, 21));
   text_layer_set_background_color(DualTemp2, GColorClear);
   text_layer_set_text(DualTemp2, strDualTemp2);
   text_layer_set_text_alignment(DualTemp2, GTextAlignmentRight);
@@ -355,26 +364,109 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)Dual_img3);
 	  
   //DualTemp 2
-  DualTemp3 = text_layer_create(GRect(4, 147, 20, 20));
+  DualTemp3 = text_layer_create(GRect(4, 147, 21, 21));
   text_layer_set_background_color(DualTemp3, GColorClear);
   text_layer_set_text(DualTemp3, strDualTemp3);
   text_layer_set_text_alignment(DualTemp3, GTextAlignmentRight);
   text_layer_set_font(DualTemp3, s_res_gothic_14);
   layer_add_child(window_get_root_layer(s_window), (Layer *)DualTemp3);
 	
+	
+	
+	//DEFINE COLORS BASED ON PLATFORM//
+	//Define the text color based on the Pebble model
+	#ifdef PBL_COLOR
+		window_set_background_color(s_window, GColorWhite);
+	
+		//LOCAL AREA
+		
+		text_layer_set_background_color(LocalArea, GColorOxfordBlue);
+		text_layer_set_text_color(LocalTime, GColorWhite);
+		text_layer_set_text_color(s_textlayer_1, GColorWhite);
+		text_layer_set_text_color(LocalDate, GColorWhite);
+		text_layer_set_text_color(LocalTemp, GColorWhite);
+	
+		bitmap_layer_set_compositing_mode(Local_img, GCompOpSet);
+	
+	 
+		//Dual Area 1
+		text_layer_set_background_color(DualArea, GColorBlue);
+		text_layer_set_text_color(DualTime, GColorWhite);
+		text_layer_set_text_color(s_textlayer_2, GColorWhite);
+		text_layer_set_text_color(DualDay, GColorWhite);
+		text_layer_set_text_color(DualDate, GColorWhite);
+		text_layer_set_text_color(DualTemp, GColorWhite);
+		bitmap_layer_set_compositing_mode(Dual_img, GCompOpSet);
+		//Dual Area 2
+		text_layer_set_background_color(DualArea2, GColorBlue);
+		text_layer_set_text_color(DualTime2, GColorWhite);
+		text_layer_set_text_color(DualTZName2, GColorWhite);
+		text_layer_set_text_color(DualDay2, GColorWhite);
+		text_layer_set_text_color(DualDate2, GColorWhite);
+		text_layer_set_text_color(DualTemp2, GColorWhite);
+		bitmap_layer_set_compositing_mode(Dual_img2, GCompOpSet);
+		//Dual Area 3
+		text_layer_set_background_color(DualArea3, GColorBlue);
+		text_layer_set_text_color(DualTime3, GColorWhite);
+		text_layer_set_text_color(DualTZName3, GColorWhite);
+		text_layer_set_text_color(DualDay3, GColorWhite);
+		text_layer_set_text_color(DualDate3, GColorWhite);
+		text_layer_set_text_color(DualTemp3, GColorWhite);
+		bitmap_layer_set_compositing_mode(Dual_img3, GCompOpSet);
+	#else
+		window_set_background_color(s_window, GColorWhite);
+		//LOCAL AREA
+		text_layer_set_background_color(LocalArea, GColorBlack);
+		text_layer_set_text_color(LocalTime, GColorWhite);
+		text_layer_set_text_color(s_textlayer_1, GColorWhite);
+		text_layer_set_text_color(LocalDate, GColorWhite);
+		text_layer_set_text_color(LocalTemp, GColorWhite);
+		bitmap_layer_set_compositing_mode(Local_img, GCompOpAssign);
+		//Dual Area 1
+		text_layer_set_background_color(DualArea, GColorBlack);
+		text_layer_set_text_color(DualTime, GColorWhite);
+		text_layer_set_text_color(s_textlayer_2, GColorWhite);
+		text_layer_set_text_color(DualDay, GColorWhite);
+		text_layer_set_text_color(DualDate, GColorWhite);
+		text_layer_set_text_color(DualTemp, GColorWhite);
+		bitmap_layer_set_compositing_mode(Dual_img, GCompOpAssign);
+		//Dual Area 2
+		text_layer_set_background_color(DualArea2, GColorBlack);
+		text_layer_set_text_color(DualTime2, GColorWhite);
+		text_layer_set_text_color(DualTZName2, GColorWhite);
+		text_layer_set_text_color(DualDay2, GColorWhite);
+		text_layer_set_text_color(DualDate2, GColorWhite);
+		text_layer_set_text_color(DualTemp2, GColorWhite);
+		bitmap_layer_set_compositing_mode(Dual_img2, GCompOpAssign);
+		//Dual Area 3
+		text_layer_set_background_color(DualArea3, GColorBlack);
+		text_layer_set_text_color(DualTime3, GColorWhite);
+		text_layer_set_text_color(DualTZName3, GColorWhite);
+		text_layer_set_text_color(DualDay3, GColorWhite);
+		text_layer_set_text_color(DualDate3, GColorWhite);
+		text_layer_set_text_color(DualTemp3, GColorWhite);
+		bitmap_layer_set_compositing_mode(Dual_img3, GCompOpAssign);
+	#endif
+		
+		
+	
 ////////////////////
 // LAYER INVERTER //
 ////////////////////
 	
-	//Invert layer to better differentiate Local and Dual timezones
-	inv_layer = inverter_layer_create(GRect(3, 54, 137, 111));
-	layer_add_child(window_get_root_layer(s_window), (Layer*) inv_layer);
-  
+	//Define the text color based on the Pebble model
+	#ifdef PBL_PLATFORM_APLITE
+	  	//Invert layer to better differentiate Local and Dual timezones
+		inv_layer = inverter_layer_create(GRect(3, 3, 137, 53));
+		layer_add_child(window_get_root_layer(s_window), (Layer*) inv_layer);
+	#endif
+	 
 }
 
 static void destroy_ui(void) {
-  window_destroy(s_window);
+  
 	/*
+  window_destroy(s_window);
   text_layer_destroy(LocalArea);
   text_layer_destroy(DualArea);
   text_layer_destroy(LocalTZ);
@@ -425,14 +517,15 @@ void getDualTime(){
 			if (persist_exists(DUAL_TZ3_KEY)){dualtz3 = persist_read_int(DUAL_TZ3_KEY);}
 			
 		
+			
 			timediff= dualtz - localtz;
 			timediff2= dualtz2 - localtz;
 			timediff3= dualtz3 - localtz;
 	
-			
+		
 			//Define and Calculate Time Zones
 			//TIME ZONE 1
-			struct tm *tzPtr = gmtime(&actualPtr);
+			struct tm *tzPtr = localtime(&actualPtr);
 		
 			tzPtr->tm_sec += timediff;
 			//Since mktime() is not realible in Pebble's firmware, use PUtils to built the dual time.
@@ -460,7 +553,7 @@ void getDualTime(){
 			strftime(dualweekday_text,sizeof(dualweekday_text),"%A",tz1Ptr);
 	
 			//TIME ZONE 2
-			struct tm *tzPtr2 = gmtime(&actualPtr);
+			struct tm *tzPtr2 = localtime(&actualPtr);
 		
 			tzPtr2->tm_sec += timediff2;
 			//Since mktime() is not realible in Pebble's firmware, use PUtils to built the dual time.
@@ -488,7 +581,7 @@ void getDualTime(){
 			strftime(dualweekday2_text,sizeof(dualweekday2_text),"%A",tz2Ptr);
 	
 			//TIME ZONE 3
-			struct tm *tzPtr3 = gmtime(&actualPtr);
+			struct tm *tzPtr3 = localtime(&actualPtr);
 		
 			tzPtr3->tm_sec += timediff3;
 			//Since mktime() is not realible in Pebble's firmware, use PUtils to built the dual time.
@@ -537,7 +630,7 @@ void getDate()
 {
 	//Get the date
 	time_t actualPtr = time(NULL);
-	struct tm *tz1Ptr = gmtime(&actualPtr);
+	struct tm *tz1Ptr = localtime(&actualPtr);
 	
 	//get the local date
 	char *sys_locale = setlocale(LC_ALL, "");
@@ -851,14 +944,14 @@ void SetupMessages(){
 					TupletInteger(DUAL_ICON_KEY, persist_read_int(DUAL_ICON_KEY)), 
 					//Dual Timezone 2
 					MyTupletCString(DUAL_NAME2_KEY, dualname2),
-					TupletInteger(DUAL_TZ2_KEY, 0),
-					MyTupletCString(DUAL_TEMP2_KEY, ""),
-					TupletInteger(DUAL_ICON2_KEY, 0), 
+					TupletInteger(DUAL_TZ2_KEY, persist_read_int(DUAL_TZ2_KEY)),
+					MyTupletCString(DUAL_TEMP2_KEY, strDualTemp2),
+					TupletInteger(DUAL_ICON2_KEY,  persist_read_int(DUAL_ICON2_KEY)), 
 					//Dual Timezone 3
 					MyTupletCString(DUAL_NAME3_KEY, dualname3),
-					TupletInteger(DUAL_TZ3_KEY, 0),
-					MyTupletCString(DUAL_TEMP3_KEY, ""),
-					TupletInteger(DUAL_ICON3_KEY, 0), 
+					TupletInteger(DUAL_TZ3_KEY, persist_read_int(DUAL_TZ3_KEY)),
+					MyTupletCString(DUAL_TEMP3_KEY, strDualTemp3),
+					TupletInteger(DUAL_ICON3_KEY,  persist_read_int(DUAL_ICON3_KEY)), 
 					
                 }; //TUPLET INITIAL VALUES
         

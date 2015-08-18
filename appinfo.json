@@ -20,9 +20,10 @@
         "localtzname": 2
     },
     "capabilities": [
+        "location",
         "configurable"
     ],
-    "companyName": "dabdemon",
+    "companyName": "David Rodr\u00edguez Rinc\u00f3n",
     "longName": "World Time",
     "projectType": "native",
     "resources": {
@@ -129,11 +130,14 @@
             }
         ]
     },
-    "sdkVersion": "2",
+    "sdkVersion": "3",
     "shortName": "World Time",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
     "uuid": "4e2ae2a7-ad7e-4955-a228-13ec4179dd35",
-    "versionCode": 1,
-    "versionLabel": "2.0",
+    "versionLabel": "2.1",
     "watchapp": {
         "watchface": true
     }
