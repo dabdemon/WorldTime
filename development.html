@@ -259,6 +259,9 @@
                 function saveOptions() {
                     var options = {
                         'use_gps': $('input:radio[name=gps_switch]:checked').val(),
+                        'set_gmt': $('input:radio[name=remote1check]:checked').val(),
+                        'remote2check': $('input:radio[name=remote2check]:checked').val(),
+                        'remote3check': $('input:radio[name=remote3check]:checked').val(),
                         'localpos': $('#localpos').val(),
                         'dualpos': $('#dualpos').val(),
                         'dualpos2': $('#dualpos2').val(),
@@ -325,13 +328,27 @@
                         $('input:radio[name=units][value=celsius]').prop('checked', true).trigger("click");
                     } else {
                         $('input:radio[name=units][value=fahrenheit]').prop('checked', true).trigger("click");
-                    }
+                    };
                     if (getQueryVariable('use_gps') == "1") {
                         $('input:radio[name=gps_switch][value=1]').prop('checked', true).trigger("click");
                     } else {
                         $('input:radio[name=gps_switch][value=0]').prop('checked', true).trigger("click");
-                    }
-                   
+                    };
+                    if (getQueryVariable('set_gmt') == "1") {
+                        $('input:radio[name=remote1check][value=1]').prop('checked', true).trigger("click");
+                    } else {
+                        $('input:radio[name=remote1check][value=0]').prop('checked', true).trigger("click");
+                    };
+                    if (getQueryVariable('remote2check') == "1") {
+                        $('input:radio[name=remote2check][value=1]').prop('checked', true).trigger("click");
+                    } else {
+                        $('input:radio[name=remote2check][value=0]').prop('checked', true).trigger("click");
+                    };
+                    if (getQueryVariable('remote3check') == "1") {
+                        $('input:radio[name=remote3check][value=1]').prop('checked', true).trigger("click");
+                    } else {
+                        $('input:radio[name=remote3check][value=0]').prop('checked', true).trigger("click");
+                    };
                     $('#UUID').val(getQueryVariable('UUID'));
                     $('#lt').val(getQueryVariable('lt'));
                     $('#key').val(getQueryVariable('key'));
