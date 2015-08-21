@@ -92,11 +92,11 @@
                       <div class="col-lg-10">
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-primary" id="gps">
-                               <input type="radio" id="false" value="1" name="localcheck" />
+                               <input type="radio" id="false" value="1" name="gps_switch" />
                               Use GPS
                             </label>
                             <label class="btn btn-primary" id="gps">
-                              <input type="radio" id="true" value="0" name="localcheck" />
+                              <input type="radio" id="true" value="0" name="gps_switch" />
                               Set Location
                             </label>
                         </div>
@@ -258,7 +258,7 @@
                 }
                 function saveOptions() {
                     var options = {
-                        'use_gps': $('input:radio[name=gps]:checked').val(),
+                        'use_gps': $('input:radio[name=gps_switch]:checked').val(),
                         'localpos': $('#localpos').val(),
                         'dualpos': $('#dualpos').val(),
                         'dualpos2': $('#dualpos2').val(),
@@ -327,9 +327,9 @@
                         $('input:radio[name=units][value=fahrenheit]').prop('checked', true).trigger("click");
                     }
                     if (getQueryVariable('use_gps') == "1") {
-                        $('input:radio[name=gps][value=1]').prop('checked', true).trigger("click");
+                        $('input:radio[name=gps_switch][value=1]').prop('checked', true).trigger("click");
                     } else {
-                        $('input:radio[name=gps][value=0]').prop('checked', true).trigger("click");
+                        $('input:radio[name=gps_switch][value=0]').prop('checked', true).trigger("click");
                     }
                    
                     $('#UUID').val(getQueryVariable('UUID'));
