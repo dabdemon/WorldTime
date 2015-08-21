@@ -258,7 +258,7 @@
                 }
                 function saveOptions() {
                     var options = {
-                        'use_gps': $('#gps').val(),
+                        'use_gps': $('input:radio[name=units]:checked').val(),
                         'localpos': $('#localpos').val(),
                         'dualpos': $('#dualpos').val(),
                         'dualpos2': $('#dualpos2').val(),
