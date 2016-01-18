@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>World Time Settings</title>
 
-          <link rel="stylesheet" href="./css/bootstrap.min.css">
+          <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.css">
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
           <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
           <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
@@ -159,7 +159,7 @@
 
                 <div data-role="fieldcontain">
                     <fieldset data-role="controlgroup" data-type="horizontal">
-                        <legend>Weather</legend>
+                        <legend>Weather<span class="help-block"><h5>Support the project with at least 1€ to unlock</h5></span></legend>
 
                     <div data-role="content">
                         <label for="lt"></label>
@@ -173,7 +173,6 @@
                             <option value="false">No</option>
                             <option value="true">Yes</option>
                         </select>
-                         <span class="help-block">Support the project with at least 1€ to unlock</span>
                       </div>
                     </div>
 
@@ -195,7 +194,370 @@
                         </div>
                     </fieldset>
                 </div>
+            
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <legend>Miscellaneous<span class="help-block"><h5>Under development</h5></span></legend>
+                        
+                        <div class="form-group">
+                            <label for="local_background" class="control-label col-lg-2">Local Zone Background Color</label>
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <span id = "demo1" style="background-color: #FFFFAA; color: #FFFFAA"> |__|       </span>
+                                    </div>
 
+                                <select class="form-control" id="local_background">
+                                    <option value="#000000">Black</option>
+                                    <option value="#000055">Oxford Blue</option>
+                                    <option value="#0000AA">Duke Blue</option>
+                                    <option value="#0000FF">Blue</option>
+                                    <option value="#005500">Dark Green</option>
+                                    <option value="#005555">Midnight Green</option>
+                                    <option value="#0055AA">Cobalt Blue</option>
+                                    <option value="#0055FF">Blue Moon</option>
+                                    <option value="#00AA00">Islamic Green</option>
+                                    <option value="#00AA55">Jaeger Green</option>
+                                    <option value="#00AAAA">Tiffany Blue</option>
+                                    <option value="#00AAFF">Vivid Cerulean</option>
+                                    <option value="#00FF00">Green</option>
+                                    <option value="#00FF55">Malachite</option>
+                                    <option value="#00FFAA">Medium Spring Green</option>
+                                    <option value="#00FFFF">Cyan</option>
+                                    <option value="#550000">Bulgarian Rose</option>
+                                    <option value="#550055">Imperial Purple</option>
+                                    <option value="#5500AA">Indigo</option>
+                                    <option value="#5500FF">Electric Ultramarine</option>
+                                    <option value="#555500">Army Green</option>
+                                    <option value="#555555">Dark Gray</option>
+                                    <option value="#5555AA">Liberty</option>
+                                    <option value="#5555FF">Very Light Blue</option>
+                                    <option value="#55AA00">Kelly Green</option>
+                                    <option value="#55AA55">May Green</option>
+                                    <option value="#55AAAA">Cadet Blue</option>
+                                    <option value="#55AAFF">Picton Blue</option>
+                                    <option value="#55FF00">Bright Green</option>
+                                    <option value="#55FF55">Screamin Green</option>
+                                    <option value="#55FFAA">Medium Aquamarine</option>
+                                    <option value="#55FFFF">Electric Blue</option>
+                                    <option value="#AA0000">Dark Candy Apple Red</option>
+                                    <option value="#AA0055">Jazzberry Jam</option>
+                                    <option value="#AA00AA">Purple</option>
+                                    <option value="#AA00FF">Vivid Violet</option>
+                                    <option value="#AA5500">Windsor Tan</option>
+                                    <option value="#AA5555">Rose Vale</option>
+                                    <option value="#AA55AA">Purpureus</option>
+                                    <option value="#AA55FF">Lavender Indigo</option>
+                                    <option value="#AAAA00">Limerick</option>
+                                    <option value="#AAAA55">Brass</option>
+                                    <option value="#AAAAAA">Light Gray</option>
+                                    <option value="#FFFFFF">White</option>
+                                    <option value="#AAAAFF">Baby Blue Eyes</option>
+                                    <option value="#AAFF00">Spring Bud</option>
+                                    <option value="#AAFF55">Inchworm</option>
+                                    <option value="#AAFFAA">Mint Green</option>
+                                    <option value="#AAFFFF">Celeste</option>
+                                    <option value="#FF0000">Red</option>
+                                    <option value="#FF0055">Folly</option>
+                                    <option value="#FF00AA">Fashion Magenta</option>
+                                    <option value="#FF00FF">Magenta</option>
+                                    <option value="#FF5500">Orange</option>
+                                    <option value="#FF5555">Sunset Orange</option>
+                                    <option value="#FF55AA">Brilliant Rose</option>
+                                    <option value="#FF55FF">Shocking Pink</option>
+                                    <option value="#FFAA00">Chrome Yellow</option>
+                                    <option value="#FFAA55">Rajah</option>
+                                    <option value="#FFAAAA">Melon</option>
+                                    <option value="#FFAAFF">Rich Brilliant Lavender</option>
+                                    <option value="#FFFF00">Yellow</option>
+                                    <option value="#FFFF55">Icterine</option>
+                                    <option value="#FFFFAA">Pastel Yellow</option>
+                                </select>                                            
+                               </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="local_text" class="control-label col-lg-2">Local Zone Text Color</label>
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <span id = "demo2" style="background-color: #FFFFAA; color: #FFFFAA"> |__|       </span>
+                                    </div>
+
+                                <select class="form-control" id="local_text">
+                                    <option value="#000000">Black</option>
+                                    <option value="#000055">Oxford Blue</option>
+                                    <option value="#0000AA">Duke Blue</option>
+                                    <option value="#0000FF">Blue</option>
+                                    <option value="#005500">Dark Green</option>
+                                    <option value="#005555">Midnight Green</option>
+                                    <option value="#0055AA">Cobalt Blue</option>
+                                    <option value="#0055FF">Blue Moon</option>
+                                    <option value="#00AA00">Islamic Green</option>
+                                    <option value="#00AA55">Jaeger Green</option>
+                                    <option value="#00AAAA">Tiffany Blue</option>
+                                    <option value="#00AAFF">Vivid Cerulean</option>
+                                    <option value="#00FF00">Green</option>
+                                    <option value="#00FF55">Malachite</option>
+                                    <option value="#00FFAA">Medium Spring Green</option>
+                                    <option value="#00FFFF">Cyan</option>
+                                    <option value="#550000">Bulgarian Rose</option>
+                                    <option value="#550055">Imperial Purple</option>
+                                    <option value="#5500AA">Indigo</option>
+                                    <option value="#5500FF">Electric Ultramarine</option>
+                                    <option value="#555500">Army Green</option>
+                                    <option value="#555555">Dark Gray</option>
+                                    <option value="#5555AA">Liberty</option>
+                                    <option value="#5555FF">Very Light Blue</option>
+                                    <option value="#55AA00">Kelly Green</option>
+                                    <option value="#55AA55">May Green</option>
+                                    <option value="#55AAAA">Cadet Blue</option>
+                                    <option value="#55AAFF">Picton Blue</option>
+                                    <option value="#55FF00">Bright Green</option>
+                                    <option value="#55FF55">Screamin Green</option>
+                                    <option value="#55FFAA">Medium Aquamarine</option>
+                                    <option value="#55FFFF">Electric Blue</option>
+                                    <option value="#AA0000">Dark Candy Apple Red</option>
+                                    <option value="#AA0055">Jazzberry Jam</option>
+                                    <option value="#AA00AA">Purple</option>
+                                    <option value="#AA00FF">Vivid Violet</option>
+                                    <option value="#AA5500">Windsor Tan</option>
+                                    <option value="#AA5555">Rose Vale</option>
+                                    <option value="#AA55AA">Purpureus</option>
+                                    <option value="#AA55FF">Lavender Indigo</option>
+                                    <option value="#AAAA00">Limerick</option>
+                                    <option value="#AAAA55">Brass</option>
+                                    <option value="#AAAAAA">Light Gray</option>
+                                    <option value="#FFFFFF">White</option>
+                                    <option value="#AAAAFF">Baby Blue Eyes</option>
+                                    <option value="#AAFF00">Spring Bud</option>
+                                    <option value="#AAFF55">Inchworm</option>
+                                    <option value="#AAFFAA">Mint Green</option>
+                                    <option value="#AAFFFF">Celeste</option>
+                                    <option value="#FF0000">Red</option>
+                                    <option value="#FF0055">Folly</option>
+                                    <option value="#FF00AA">Fashion Magenta</option>
+                                    <option value="#FF00FF">Magenta</option>
+                                    <option value="#FF5500">Orange</option>
+                                    <option value="#FF5555">Sunset Orange</option>
+                                    <option value="#FF55AA">Brilliant Rose</option>
+                                    <option value="#FF55FF">Shocking Pink</option>
+                                    <option value="#FFAA00">Chrome Yellow</option>
+                                    <option value="#FFAA55">Rajah</option>
+                                    <option value="#FFAAAA">Melon</option>
+                                    <option value="#FFAAFF">Rich Brilliant Lavender</option>
+                                    <option value="#FFFF00">Yellow</option>
+                                    <option value="#FFFF55">Icterine</option>
+                                    <option value="#FFFFAA">Pastel Yellow</option>
+                                </select>                                            
+                               </div>
+                            </div>
+                        </div>
+                        
+                                                <div class="form-group">
+                            <label for="dual_background" class="control-label col-lg-2">Dual Zones Background Color</label>
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <span id = "demo3" style="background-color: #FFFFAA; color: #FFFFAA"> |__|       </span>
+                                    </div>
+
+                                <select class="form-control" id="dual_background">
+                                    <option value="#000000">Black</option>
+                                    <option value="#000055">Oxford Blue</option>
+                                    <option value="#0000AA">Duke Blue</option>
+                                    <option value="#0000FF">Blue</option>
+                                    <option value="#005500">Dark Green</option>
+                                    <option value="#005555">Midnight Green</option>
+                                    <option value="#0055AA">Cobalt Blue</option>
+                                    <option value="#0055FF">Blue Moon</option>
+                                    <option value="#00AA00">Islamic Green</option>
+                                    <option value="#00AA55">Jaeger Green</option>
+                                    <option value="#00AAAA">Tiffany Blue</option>
+                                    <option value="#00AAFF">Vivid Cerulean</option>
+                                    <option value="#00FF00">Green</option>
+                                    <option value="#00FF55">Malachite</option>
+                                    <option value="#00FFAA">Medium Spring Green</option>
+                                    <option value="#00FFFF">Cyan</option>
+                                    <option value="#550000">Bulgarian Rose</option>
+                                    <option value="#550055">Imperial Purple</option>
+                                    <option value="#5500AA">Indigo</option>
+                                    <option value="#5500FF">Electric Ultramarine</option>
+                                    <option value="#555500">Army Green</option>
+                                    <option value="#555555">Dark Gray</option>
+                                    <option value="#5555AA">Liberty</option>
+                                    <option value="#5555FF">Very Light Blue</option>
+                                    <option value="#55AA00">Kelly Green</option>
+                                    <option value="#55AA55">May Green</option>
+                                    <option value="#55AAAA">Cadet Blue</option>
+                                    <option value="#55AAFF">Picton Blue</option>
+                                    <option value="#55FF00">Bright Green</option>
+                                    <option value="#55FF55">Screamin Green</option>
+                                    <option value="#55FFAA">Medium Aquamarine</option>
+                                    <option value="#55FFFF">Electric Blue</option>
+                                    <option value="#AA0000">Dark Candy Apple Red</option>
+                                    <option value="#AA0055">Jazzberry Jam</option>
+                                    <option value="#AA00AA">Purple</option>
+                                    <option value="#AA00FF">Vivid Violet</option>
+                                    <option value="#AA5500">Windsor Tan</option>
+                                    <option value="#AA5555">Rose Vale</option>
+                                    <option value="#AA55AA">Purpureus</option>
+                                    <option value="#AA55FF">Lavender Indigo</option>
+                                    <option value="#AAAA00">Limerick</option>
+                                    <option value="#AAAA55">Brass</option>
+                                    <option value="#AAAAAA">Light Gray</option>
+                                    <option value="#FFFFFF">White</option>
+                                    <option value="#AAAAFF">Baby Blue Eyes</option>
+                                    <option value="#AAFF00">Spring Bud</option>
+                                    <option value="#AAFF55">Inchworm</option>
+                                    <option value="#AAFFAA">Mint Green</option>
+                                    <option value="#AAFFFF">Celeste</option>
+                                    <option value="#FF0000">Red</option>
+                                    <option value="#FF0055">Folly</option>
+                                    <option value="#FF00AA">Fashion Magenta</option>
+                                    <option value="#FF00FF">Magenta</option>
+                                    <option value="#FF5500">Orange</option>
+                                    <option value="#FF5555">Sunset Orange</option>
+                                    <option value="#FF55AA">Brilliant Rose</option>
+                                    <option value="#FF55FF">Shocking Pink</option>
+                                    <option value="#FFAA00">Chrome Yellow</option>
+                                    <option value="#FFAA55">Rajah</option>
+                                    <option value="#FFAAAA">Melon</option>
+                                    <option value="#FFAAFF">Rich Brilliant Lavender</option>
+                                    <option value="#FFFF00">Yellow</option>
+                                    <option value="#FFFF55">Icterine</option>
+                                    <option value="#FFFFAA">Pastel Yellow</option>
+                                </select>                                            
+                               </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dual_text" class="control-label col-lg-2">Dual Zones Text Color</label>
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <span id = "demo4" style="background-color: #FFFFAA; color: #FFFFAA"> |__|       </span>
+                                    </div>
+
+                                <select class="form-control" id="dual_text">
+                                    <option value="#000000">Black</option>
+                                    <option value="#000055">Oxford Blue</option>
+                                    <option value="#0000AA">Duke Blue</option>
+                                    <option value="#0000FF">Blue</option>
+                                    <option value="#005500">Dark Green</option>
+                                    <option value="#005555">Midnight Green</option>
+                                    <option value="#0055AA">Cobalt Blue</option>
+                                    <option value="#0055FF">Blue Moon</option>
+                                    <option value="#00AA00">Islamic Green</option>
+                                    <option value="#00AA55">Jaeger Green</option>
+                                    <option value="#00AAAA">Tiffany Blue</option>
+                                    <option value="#00AAFF">Vivid Cerulean</option>
+                                    <option value="#00FF00">Green</option>
+                                    <option value="#00FF55">Malachite</option>
+                                    <option value="#00FFAA">Medium Spring Green</option>
+                                    <option value="#00FFFF">Cyan</option>
+                                    <option value="#550000">Bulgarian Rose</option>
+                                    <option value="#550055">Imperial Purple</option>
+                                    <option value="#5500AA">Indigo</option>
+                                    <option value="#5500FF">Electric Ultramarine</option>
+                                    <option value="#555500">Army Green</option>
+                                    <option value="#555555">Dark Gray</option>
+                                    <option value="#5555AA">Liberty</option>
+                                    <option value="#5555FF">Very Light Blue</option>
+                                    <option value="#55AA00">Kelly Green</option>
+                                    <option value="#55AA55">May Green</option>
+                                    <option value="#55AAAA">Cadet Blue</option>
+                                    <option value="#55AAFF">Picton Blue</option>
+                                    <option value="#55FF00">Bright Green</option>
+                                    <option value="#55FF55">Screamin Green</option>
+                                    <option value="#55FFAA">Medium Aquamarine</option>
+                                    <option value="#55FFFF">Electric Blue</option>
+                                    <option value="#AA0000">Dark Candy Apple Red</option>
+                                    <option value="#AA0055">Jazzberry Jam</option>
+                                    <option value="#AA00AA">Purple</option>
+                                    <option value="#AA00FF">Vivid Violet</option>
+                                    <option value="#AA5500">Windsor Tan</option>
+                                    <option value="#AA5555">Rose Vale</option>
+                                    <option value="#AA55AA">Purpureus</option>
+                                    <option value="#AA55FF">Lavender Indigo</option>
+                                    <option value="#AAAA00">Limerick</option>
+                                    <option value="#AAAA55">Brass</option>
+                                    <option value="#AAAAAA">Light Gray</option>
+                                    <option value="#FFFFFF">White</option>
+                                    <option value="#AAAAFF">Baby Blue Eyes</option>
+                                    <option value="#AAFF00">Spring Bud</option>
+                                    <option value="#AAFF55">Inchworm</option>
+                                    <option value="#AAFFAA">Mint Green</option>
+                                    <option value="#AAFFFF">Celeste</option>
+                                    <option value="#FF0000">Red</option>
+                                    <option value="#FF0055">Folly</option>
+                                    <option value="#FF00AA">Fashion Magenta</option>
+                                    <option value="#FF00FF">Magenta</option>
+                                    <option value="#FF5500">Orange</option>
+                                    <option value="#FF5555">Sunset Orange</option>
+                                    <option value="#FF55AA">Brilliant Rose</option>
+                                    <option value="#FF55FF">Shocking Pink</option>
+                                    <option value="#FFAA00">Chrome Yellow</option>
+                                    <option value="#FFAA55">Rajah</option>
+                                    <option value="#FFAAAA">Melon</option>
+                                    <option value="#FFAAFF">Rich Brilliant Lavender</option>
+                                    <option value="#FFFF00">Yellow</option>
+                                    <option value="#FFFF55">Icterine</option>
+                                    <option value="#FFFFAA">Pastel Yellow</option>
+                                </select>                                            
+                               </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="local_preview" class="control-label col-lg-2">Live Preview</label>
+                            <div class="col-lg-6">
+                                <svg width="400" height="110">
+                                    <rect width="300" height="100" style="fill:#000055;stroke-width:3;stroke:rgb(0,0,0)" id="local_background_preview"/>
+                                    <text x="40" y="20" style="fill:white;font-weight: bold;" id = "local_name_preview">Madrid
+                                    </text>
+                                    <text x="40" y="35" style="fill:white;" id = "local_text_preview">monday, jan 18 2016
+                                         <tspan x="135" y="90"font-size="60">14:56</tspan>
+                                    </text>
+                                </svg> 
+                                <svg width="400" height="60">
+                                    <rect width="300" height="50" style="fill:blue;stroke-width:3;stroke:rgb(0,0,0)" id="dual1_background_preview"/>
+                                    <text x="40" y="15" style="fill:white;font-weight: bold;" id = "dual1_name_preview">GMT
+                                    </text>
+                                    <text x="40" y="30" style="fill:white;" id = "dual1_text_preview">monday
+                                          <tspan x="40" y="45">jan 18 2016</tspan>
+                                         <tspan x="205" y="45"font-size="30">13:56</tspan>
+                                    </text>
+                                </svg> 
+                                <svg width="400" height="60">
+                                    <rect width="300" height="50" style="fill:blue;stroke-width:3;stroke:rgb(0,0,0)" id="dual2_background_preview"/>
+                                    <text x="40" y="15" style="fill:white;font-weight: bold;" id = "dual2_name_preview">Mountain View
+                                    </text>
+                                    <text x="40" y="30" style="fill:white;" id = "dual2_text_preview">monday
+                                          <tspan x="40" y="45">jan 18 2016</tspan>
+                                         <tspan x="220" y="45"font-size="30">5:56</tspan>
+                                    </text>
+                                </svg> 
+                                <svg width="400" height="60">
+                                    <rect width="300" height="50" style="fill:blue;stroke-width:3;stroke:rgb(0,0,0)" id="dual3_background_preview"/>
+                                    <text x="40" y="15" style="fill:white;font-weight: bold;" id = "dual3_name_preview">Sydney
+                                    </text>
+                                    <text x="40" y="30" style="fill:white;" id = "dual3_text_preview">tuesday
+                                          <tspan x="40" y="45">jan 19 2016</tspan>
+                                         <tspan x="220" y="45"font-size="30">0:56</tspan>
+                                    </text>
+                                </svg> 
+                            </div>
+                        </div>
+            
+                         
+                        
+                        
+                    </fieldset>
+
+            </div>
 
             </div>
             <br>
@@ -298,18 +660,14 @@
                     $('#b-submit').click(function() {
                         document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(saveOptions()));
                     });
-
-
                     $('.btn-primary').on('click', function(){
                         
                         if(this.id==="gps"){
                           $('#localpos').prop('disabled', parseInt($(this).find('input').attr('value')));                         
                         }
-
                         if(this.id==="remote1"){
                           $('#dualpos').prop('disabled', parseInt($(this).find('input').attr('value')));                         
                         }
-
                         if(this.id==="remote2"){
                           $('#dualpos2').prop('disabled', parseInt($(this).find('input').attr('value')));
                         }
@@ -318,8 +676,64 @@
                           $('#dualpos3').prop('disabled', parseInt($(this).find('input').attr('value')));
                         }
                     }); 
-
-
+                    
+                    $('#local_background').change(function(){
+                            
+                            var selectedColor = $('#local_background').val();
+                             var styles = {
+                                  backgroundColor : selectedColor,
+                                  color: selectedColor
+                                };
+                         
+                         $("#demo1").css(styles);
+                        $("#local_background_preview").css('fill',selectedColor);
+                    });
+                    
+                     $('#local_text').change(function(){
+                         
+                             var selectedColor = $('#local_text').val();
+                             var styles = {
+                                  backgroundColor : selectedColor,
+                                  color: selectedColor
+                                };
+                         
+                         $("#demo2").css(styles);
+                         $("#local_name_preview").css('fill',selectedColor);
+                         $("#local_text_preview").css('fill',selectedColor);
+                    });
+                    
+                    $('#dual_background').change(function(){
+                            
+                            var selectedColor = $('#dual_background').val();
+                             var styles = {
+                                  backgroundColor : selectedColor,
+                                  color: selectedColor
+                                };
+                         
+                         $("#demo3").css(styles);
+                        $("#dual1_background_preview").css('fill',selectedColor);
+                        $("#dual2_background_preview").css('fill',selectedColor);
+                        $("#dual3_background_preview").css('fill',selectedColor);
+                    });
+                    
+                     $('#dual_text').change(function(){
+                         
+                             var selectedColor = $('#dual_text').val();
+                             var styles = {
+                                  backgroundColor : selectedColor,
+                                  color: selectedColor
+                                };
+                         
+                         $("#demo4").css(styles);
+                         $("#dual1_name_preview").css('fill',selectedColor);
+                         $("#dual1_text_preview").css('fill',selectedColor);
+                         $("#dual2_name_preview").css('fill',selectedColor);
+                         $("#dual2_text_preview").css('fill',selectedColor);
+                         $("#dual3_name_preview").css('fill',selectedColor);
+                         $("#dual3_text_preview").css('fill',selectedColor);
+                    });
+                    
+                    
                     $('#localpos').val(getQueryVariable('localpos'));
                     $('#dualpos').val(getQueryVariable('dualpos'));
                     $('#dualpos2').val(getQueryVariable('dualpos2'));
