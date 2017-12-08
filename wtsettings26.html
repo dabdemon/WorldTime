@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>World Time Settings</title>
+
+          <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.css">
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+          <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+          <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+          <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+          <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places&language=en" ></script>
+
+    </head>
+    <body onload="initialize()">
+    
+
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>                        
+              </button>
+              <a class="navbar-brand" href="#">World Time</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+              <ul class="nav navbar-nav">
+                <li><a href="#">Settings</a></li>
+                <li><a href="./FAQ.html">FAQ</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <div class = "container">
+            <div class="jumbotron">
+                <h2 class="text-default">Please enter your settings below, then click on the Submit button</h2>
+                <h4 class="text-danger"><b>NOTE:</b> Your changes won't be instantly displayed on your pebble. Please kindly wait up to one minute.</h4>
+            </div>
+        </div>
+
+
+        <br>
+
+        <form class="form-horizontal">
+            <!--Settings body-->
+            <div class="container">
+                 
+                <div class="form-group">
+                  <label for="UUID" class="col-lg-2 control-label">User ID</label>
+                  <div class="col-lg-10">
+                    <input type="text" class="form-control" id="UUID">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="key" class="col-lg-2 control-label">User Key</label>
+                  <div class="col-lg-10">
+                    <input type="text" class="form-control" id="key">
+                  </div>
+                </div>
+
+              
+                <div data-role="fieldcontain">
+                    <legend>Timezones</legend>
+
+                    <div class="form-group">
+                      <label for="localpos" class="col-lg-2 control-label">Local City</label>
+                      <div class="col-lg-10">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary" id="gps">
+                               <input type="radio" id="false" value="1" name="gps_switch" />
+                              Use GPS
+                            </label>
+                            <label class="btn btn-primary" id="gps">
+                              <input type="radio" id="true" value="0" name="gps_switch" />
+                              Set Location
+                            </label>
+                        </div>
+                        <input class="form-control" id="localpos" placeholder="i.e. Madrid" type="text"></input>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="dualpos" class="col-lg-2 control-label">Remote City 1</label>    
+                      <div class="col-lg-10">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary" id="remote1">
+                               <input type="radio" id="false" value="1" name="remote1check" />
+                              Set to GMT
+                            </label>
+                            <label class="btn btn-primary" id="remote1">
+                              <input type="radio" id="true" value="0" name="remote1check" />
+                              Set Location
+                            </label>
+                        </div>
+                        <input type="text" class="form-control" id="dualpos" placeholder="i.e. Mountain View">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="dualpos2" class="col-lg-2 control-label">Remote City 2</label>
+                      <div class="col-lg-10">
+                          <div class="btn-group hidden" data-toggle="buttons">
+                              <label class="btn btn-primary" id="remote2">
+                                 <input type="radio" id="false" value=0 name="remote2check" />
+                                Active
+                              </label>
+                              <label class="btn btn-primary" id="remote2">
+                                <input type="radio" id="true" value=1 name="remote2check" />
+                                Inactive
+                              </label>
+                          </div>
+                        <input type="text" class="form-control" id="dualpos2" placeholder="i.e. Osaka">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="dualpos3" class="col-lg-2 control-label">Remote City 3</label>
+                      <div class="col-lg-10">
+                          <div class="btn-group hidden" data-toggle="buttons">
+                              <label class="btn btn-primary" id="remote3">
+                                 <input type="radio" id="false" value=0 name="remote3check" />
+                                Active
+                              </label>
+                              <label class="btn btn-primary" id="remote3">
+                                <input type="radio" id="true" value=1 name="remote3check" />
+                                Inactive
+                              </label>
+                          </div>
+                        <input type="text" class="form-control" id="dualpos3" placeholder="i.e. Buenos Aires">
+                      </div>
+                    </div>
+
+                </div>
+
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <legend>Weather<span class="help-block"><h5>Support the project with at least 1€ to unlock</h5></span></legend>
+
+                    <div data-role="content">
+                        <label for="lt"></label>
+                        <input type="text" name="lt" id="lt" value="" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="weather" class="col-lg-2 control-label">Display Weather</label>
+                      <div class="col-lg-10">
+                        <select class="form-control" id="weather">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                      </div>
+                    </div>
+
+
+                        <div class="form-group">
+                          <label class="col-lg-2 control-label">Units</label>
+                          <div class="col-lg-10">
+                          <div class="btn-group" data-toggle="buttons">
+                              <label class="btn btn-primary" id="celsius">
+                                 <input type="radio"  value="celsius" name="units" />
+                                Metric (ºC)
+                              </label>
+                              <label class="btn btn-primary" id="fahrenheit">
+                                <input type="radio" value="fahrenheit" name="units" />
+                                Imperial (ºF)
+                              </label>
+                          </div>
+                          </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+            </div>
+            <br>
+            <!-- Submit buttons-->
+            <div class='container' align="center">
+                <fieldset>
+                	<div class='btn btn-warning' type='submit' id='b-support'>Support</button></div>
+                    <div class='btn btn-danger' type='cancel' id='b-cancel'>Cancel</button></div>
+                    <div class='btn btn-success' type='submit' id='b-submit'>Submit</button></div>
+                </fieldset>
+            </div>
+            
+             <!-- footer -->
+        <div class = "container">
+            <div align = "center">
+                <h4>Made with <span class="text-danger"><b>&hearts;</b></span> in Spain</h4>
+            </div>
+        </div>
+        
+        </form>
+        <script type="text/javascript">
+        //Google Search API
+        function initialize() {
+          // Create the autocomplete object, restricting the search
+          // to geographical location types.
+          localpos = new google.maps.places.Autocomplete(
+              /** @type {HTMLInputElement} */(document.getElementById('localpos')),
+              { types: ['geocode'] });
+          // Create the autocomplete object, restricting the search
+          // to geographical location types.
+          dualpos = new google.maps.places.Autocomplete(
+              /** @type {HTMLInputElement} */(document.getElementById('dualpos')),
+              { types: ['geocode'] });
+                  // Create the autocomplete object, restricting the search
+          // to geographical location types.
+          dualpos2 = new google.maps.places.Autocomplete(
+              /** @type {HTMLInputElement} */(document.getElementById('dualpos2')),
+              { types: ['geocode'] });
+                  // Create the autocomplete object, restricting the search
+          // to geographical location types.
+          dualpos3 = new google.maps.places.Autocomplete(
+              /** @type {HTMLInputElement} */(document.getElementById('dualpos3')),
+              { types: ['geocode'] });
+        }           
+        </script>
+
+
+
+<!-- CODE-->
+        <script>
+            
+                function getQueryVariable(variable) {
+                    var query = location.search.substring(1);
+                    var vars = query.split('&');
+                    for (var i = 0; i < vars.length; i++) {
+                        var pair = vars[i].split('=');
+                        if (pair[0] == variable)
+                            return decodeURIComponent(pair[1]);
+                    }
+                    return "";
+                }
+                function saveOptions() {
+                    var options = {
+                        'use_gps': $('input:radio[name=gps_switch]:checked').val(),
+                        'set_gmt': $('input:radio[name=remote1check]:checked').val(),
+                        'remote2check': $('input:radio[name=remote2check]:checked').val(),
+                        'remote3check': $('input:radio[name=remote3check]:checked').val(),
+                        'localpos': $('#localpos').val(),
+                        'dualpos': $('#dualpos').val(),
+                        'dualpos2': $('#dualpos2').val(),
+                        'dualpos3': $('#dualpos3').val(),
+                        'units': $('input:radio[name=units]:checked').val(),
+                        'UUID': $('#UUID').val(),
+                        'lt': $('#lt').val(),
+                        'key': $('#key').val(),
+                        'weather': $('#weather').val(),
+                        'version' : "2.6"
+                    }
+                    return options;
+                }
+                $().ready(function() {
+                    //Disable the UUID. this is merely informational
+                    //$('#UUID').prop('disabled', true);
+                    $('#lt').prop('disabled', true);
+                    $("#lt").hide();
+                  
+                    $('#b-cancel').click(function() {
+                        document.location = 'pebblejs://close#';
+                    });
+                    $('#b-submit').click(function() {
+                        document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(saveOptions()));
+                    });
+                    $('#b-support').click(function() {
+                        var body = '***** %0D%0A Please, explain as accurate as you could what your problem is  %0D%0A*****%0D%0A %0D%0A %0D%0A ***** %0D%0A  DO NOT REMOVE THIS  %0D%0A *****%0D%0A';
+                        var settings = encodeURIComponent(JSON.stringify(saveOptions()));
+                        var to = 'pebbleweather@gmail.com';
+                        var subject = 'Support Required - World Time Settings';
+                        document.location.href = "mailto:"+to+"?subject="+subject+"&body="+body + settings;
+                    });
+                    $('.btn-primary').on('click', function(){
+                        
+                        if(this.id==="gps"){
+                          $('#localpos').prop('disabled', parseInt($(this).find('input').attr('value')));                         
+                        }
+                        if(this.id==="remote1"){
+                          $('#dualpos').prop('disabled', parseInt($(this).find('input').attr('value')));                         
+                        }
+                        /*
+                        if(this.id==="remote2"){
+                          $('#dualpos2').prop('disabled', parseInt($(this).find('input').attr('value')));
+                        }
+                        
+                        if(this.id==="remote3"){
+                          $('#dualpos3').prop('disabled', parseInt($(this).find('input').attr('value')));
+                        }
+                        */
+                    }); 
+                               
+                    
+                    $('#localpos').val(getQueryVariable('localpos'));
+                    $('#dualpos').val(getQueryVariable('dualpos'));
+                    $('#dualpos2').val(getQueryVariable('dualpos2'));
+                    $('#dualpos3').val(getQueryVariable('dualpos3'));
+                    if (getQueryVariable('units') == "celsius") {
+                        $('input:radio[name=units][value=celsius]').prop('checked', true).trigger("click");
+                    } else {
+                        $('input:radio[name=units][value=fahrenheit]').prop('checked', true).trigger("click");
+                    };
+                    if (getQueryVariable('use_gps') == "1") {
+                        $('input:radio[name=gps_switch][value=1]').prop('checked', true).trigger("click");
+                    } else {
+                        $('input:radio[name=gps_switch][value=0]').prop('checked', true).trigger("click");
+                    };
+                    if (getQueryVariable('set_gmt') == "1") {
+                        $('input:radio[name=remote1check][value=1]').prop('checked', true).trigger("click");
+                    } else {
+                        $('input:radio[name=remote1check][value=0]').prop('checked', true).trigger("click");
+                    };
+                    if (getQueryVariable('remote2check') == "1") {
+                        $('input:radio[name=remote2check][value=1]').prop('checked', true).trigger("click");
+                    } else {
+                        $('input:radio[name=remote2check][value=0]').prop('checked', true).trigger("click");
+                    };
+                    if (getQueryVariable('remote3check') == "1") {
+                        $('input:radio[name=remote3check][value=1]').prop('checked', true).trigger("click");
+                    } else {
+                        $('input:radio[name=remote3check][value=0]').prop('checked', true).trigger("click");
+                    };
+                    $('#UUID').val(getQueryVariable('UUID'));
+                    $('#lt').val(getQueryVariable('lt'));
+                    $('#key').val(getQueryVariable('key'));
+                    $('#weather').val(getQueryVariable('weather')).change();
+                    $('#os0').val(getQueryVariable('UUID'));
+                });
+            
+        </script>
+
+
+    </body>
+</html>
+
